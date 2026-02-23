@@ -1,4 +1,4 @@
-# E-Commerce Dashboard and Admin Portal
+# Retail Dashboard and Admin Portal
 
 ## 1. Project Overview
 
@@ -161,3 +161,4 @@ To execute the unit tests via Karma, run:
 ng test
 
 ```
+
