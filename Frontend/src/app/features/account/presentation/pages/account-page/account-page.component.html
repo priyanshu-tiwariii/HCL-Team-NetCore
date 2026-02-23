@@ -1,0 +1,250 @@
+<div class="bg-zinc-50 min-h-screen py-8 px-4">
+  <div class="max-w-3xl mx-auto flex flex-col gap-6">
+
+    <!-- ════════════════════════════════════════════════════
+         HEADER CARD — Avatar + Greeting
+         ════════════════════════════════════════════════════ -->
+    <div class="bg-white! rounded-2xl border border-zinc-200 shadow-sm p-6 flex items-center gap-5">
+      <p-avatar [label]="initials()"
+                size="xlarge"
+                shape="circle"
+                [style]="{ 'background-color': '#18181b', color: '#fff', 'font-size': '1.25rem', 'font-weight': '700' }">
+      </p-avatar>
+      <div>
+        <h1 class="text-2xl font-bold text-zinc-900">
+          {{ isAdmin() ? 'Admin Profile' : 'My Account' }}
+        </h1>
+        <p class="text-sm text-zinc-500 mt-0.5">
+          {{ isAdmin() ? 'System administrator overview' : 'Manage your personal info and delivery address' }}
+        </p>
+      </div>
+    </div>
+
+    <!-- ════════════════════════════════════════════════════
+         ADMIN VIEW
+         ════════════════════════════════════════════════════ -->
+    @if (isAdmin()) {
+      <div class="bg-white! rounded-2xl border border-zinc-200 shadow-sm p-6">
+        <div class="flex items-center gap-2 mb-6">
+          <i class="pi pi-id-card text-zinc-600"></i>
+          <h2 class="text-lg font-semibold text-zinc-900">Account Information</h2>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          <!-- Name -->
+          <div>
+            <p class="text-xs text-zinc-500 uppercase tracking-wider mb-1">Name</p>
+            <p class="text-sm font-medium text-zinc-900">{{ authState.userProfile()?.userName }}</p>
+          </div>
+
+          <!-- Email -->
+          <div>
+            <p class="text-xs text-zinc-500 uppercase tracking-wider mb-1">Email</p>
+            <p class="text-sm font-medium text-zinc-900">{{ authState.userProfile()?.email }}</p>
+          </div>
+
+          <!-- Role -->
+          <div>
+            <p class="text-xs text-zinc-500 uppercase tracking-wider mb-1">Role</p>
+            <p class="text-sm font-medium text-zinc-900">System Administrator</p>
+          </div>
+
+          <!-- Company -->
+          <div>
+            <p class="text-xs text-zinc-500 uppercase tracking-wider mb-1">Company</p>
+            <p class="text-sm font-medium text-zinc-900">
+              {{ authState.userProfile()?.companyName || 'Food Delivery Enterprise' }}
+            </p>
+          </div>
+        </div>
+      </div>
+    }
+
+    <!-- ════════════════════════════════════════════════════
+         CUSTOMER VIEW
+         ════════════════════════════════════════════════════ -->
+    @if (!isAdmin()) {
+      <!-- Personal Info Card -->
+      <div class="bg-white! rounded-2xl border border-zinc-200 shadow-sm p-6">
+        <div class="flex items-center gap-2 mb-6">
+          <i class="pi pi-user text-zinc-600"></i>
+          <h2 class="text-lg font-semibold text-zinc-900">Personal Information</h2>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          <!-- Name -->
+          <div>
+            <p class="text-xs text-zinc-500 uppercase tracking-wider mb-1">Name</p>
+            <p class="text-sm font-medium text-zinc-900">{{ authState.userProfile()?.userName }}</p>
+          </div>
+
+          <!-- Email -->
+          <div>
+            <p class="text-xs text-zinc-500 uppercase tracking-wider mb-1">Email</p>
+            <p class="text-sm font-medium text-zinc-900">{{ authState.userProfile()?.email }}</p>
+          </div>
+
+          <!-- Mobile Number -->
+          <div>
+            <p class="text-xs text-zinc-500 uppercase tracking-wider mb-1">Mobile Number</p>
+            <p class="text-sm font-medium text-zinc-900">
+              {{ authState.userProfile()?.mobileNumber || 'Not provided' }}
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Delivery Address Card -->
+      <div class="bg-white! rounded-2xl border border-zinc-200 shadow-sm p-6">
+        <div class="flex items-center justify-between mb-6">
+          <div class="flex items-center gap-2">
+            <i class="pi pi-map-marker text-zinc-600"></i>
+            <h2 class="text-lg font-semibold text-zinc-900">Default Delivery Address</h2>
+          </div>
+          <button pButton
+                  label="Edit"
+                  icon="pi pi-pencil"
+                  severity="secondary"
+                  [outlined]="true"
+                  [rounded]="true"
+                  class="!text-sm"
+                  (click)="openEditModal()">
+          </button>
+        </div>
+
+        @if (isLoadingAddress()) {
+          <div class="space-y-3">
+            <p-skeleton width="70%" height="1rem" />
+            <p-skeleton width="50%" height="1rem" />
+            <p-skeleton width="60%" height="1rem" />
+            <p-skeleton width="30%" height="1rem" />
+          </div>
+        } @else if (currentAddress()) {
+          <div class="text-sm text-zinc-700 space-y-1">
+            <p class="font-medium text-zinc-900">{{ currentAddress()!.street }}</p>
+            <p>{{ currentAddress()!.city }}, {{ currentAddress()!.state }}</p>
+            <p>{{ currentAddress()!.country }} — {{ currentAddress()!.pincode }}</p>
+          </div>
+        } @else {
+          <div class="text-center py-8">
+            <i class="pi pi-map-marker text-3xl text-zinc-300 mb-3"></i>
+            <p class="text-sm text-zinc-500 mb-4">No address saved yet.</p>
+            <button pButton
+                    label="Add Address"
+                    icon="pi pi-plus"
+                    severity="secondary"
+                    [outlined]="true"
+                    (click)="openEditModal()">
+            </button>
+          </div>
+        }
+      </div>
+    }
+
+    <!-- ════════════════════════════════════════════════════
+         ACCOUNT ACTIONS (both roles)
+         ════════════════════════════════════════════════════ -->
+    <div class="bg-white! rounded-2xl border border-zinc-200 shadow-sm p-6">
+      <div class="flex items-center gap-2 mb-4">
+        <i class="pi pi-shield text-zinc-600"></i>
+        <h2 class="text-lg font-semibold text-zinc-900">Security</h2>
+      </div>
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-sm font-medium text-zinc-900">Password</p>
+          <p class="text-xs text-zinc-500">Last changed 30 days ago</p>
+        </div>
+        <button pButton
+                label="Change Password"
+                icon="pi pi-lock"
+                severity="secondary"
+                [outlined]="true"
+                [rounded]="true"
+                class="!text-sm">
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════
+     EDIT ADDRESS MODAL
+     ════════════════════════════════════════════════════════ -->
+<p-dialog [visible]="isEditModalOpen()"
+          (visibleChange)="onModalHide()"
+          [modal]="true"
+          [closable]="false"
+          [draggable]="false"
+          [style]="{ width: '480px' }"
+          [breakpoints]="{ '576px': '95vw' }">
+
+  <!-- Custom header -->
+  <ng-template #header>
+    <div class="flex items-center justify-between w-full">
+      <div class="flex items-center gap-3">
+        <div class="flex items-center justify-center w-9 h-9 rounded-lg bg-zinc-100">
+          <i class="pi pi-map-marker text-zinc-700"></i>
+        </div>
+        <h3 class="text-lg font-bold text-zinc-900">Edit Delivery Address</h3>
+      </div>
+      <button pButton
+              [text]="true"
+              [rounded]="true"
+              icon="pi pi-times"
+              (click)="onModalHide()">
+      </button>
+    </div>
+  </ng-template>
+
+  <form [formGroup]="addressForm" (ngSubmit)="saveAddress()" class="space-y-4 pt-2">
+    <!-- Street -->
+    <div>
+      <label class="block text-sm font-medium text-zinc-700 mb-1">Street Address</label>
+      <input pInputText formControlName="street" placeholder="House, Street, Area" class="w-full" />
+    </div>
+
+    <!-- City & State -->
+    <div class="grid grid-cols-2 gap-4">
+      <div>
+        <label class="block text-sm font-medium text-zinc-700 mb-1">City</label>
+        <input pInputText formControlName="city" placeholder="City" class="w-full" />
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-zinc-700 mb-1">State</label>
+        <input pInputText formControlName="state" placeholder="State" class="w-full" />
+      </div>
+    </div>
+
+    <!-- Country & Pincode -->
+    <div class="grid grid-cols-2 gap-4">
+      <div>
+        <label class="block text-sm font-medium text-zinc-700 mb-1">Country</label>
+        <input pInputText formControlName="country" placeholder="Country" class="w-full" />
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-zinc-700 mb-1">Pincode</label>
+        <input pInputText formControlName="pincode" placeholder="6-digit code" class="w-full" />
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <p-divider />
+    <div class="flex justify-end gap-3">
+      <button pButton
+              type="button"
+              label="Cancel"
+              severity="secondary"
+              [outlined]="true"
+              [rounded]="true"
+              (click)="onModalHide()">
+      </button>
+      <button pButton
+              type="submit"
+              label="Save Address"
+              icon="pi pi-check"
+              [rounded]="true"
+              [loading]="isSaving()">
+      </button>
+    </div>
+  </form>
+</p-dialog>

@@ -3,4 +3,7 @@ export interface UserProfile {
   employeeCode: string;
   userName: string;
   email: string;
+  mobileNumber?: string;
+  companyName?: string;
+  isAdmin: boolean;
 }
