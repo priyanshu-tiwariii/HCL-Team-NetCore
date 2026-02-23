@@ -12,7 +12,14 @@ import { RegisterRequest } from '../../../data/models/register-request.model';
 @Component({
   selector: 'app-signup-page',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink, ButtonModule, InputTextModule, PasswordModule],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    RouterLink,
+    ButtonModule,
+    InputTextModule,
+    PasswordModule,
+  ],
   templateUrl: './signup-page.html',
 })
 export class SignupPage {

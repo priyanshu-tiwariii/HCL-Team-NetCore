@@ -1,3 +1,1 @@
-export interface DashboardRequest {
-
-}
+export interface DashboardRequest {}

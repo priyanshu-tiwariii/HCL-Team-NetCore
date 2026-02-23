@@ -1,5 +1,5 @@
 export interface AddressRequest {
-    userId: number;
+  userId: number;
   addressDetail: string;
   city: string;
   state: string;

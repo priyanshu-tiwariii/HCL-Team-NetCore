@@ -38,14 +38,17 @@ export class AuthLogic {
    * 1. Register the User -> Get UserId
    * 2. Save the Address using the new UserId
    */
-  async registerAndSaveAddress(registerData: RegisterRequest, addressData: Omit<AddressRequest, 'userId'>): Promise<void> {
+  async registerAndSaveAddress(
+    registerData: RegisterRequest,
+    addressData: Omit<AddressRequest, 'userId'>,
+  ): Promise<void> {
     const newUserId = await this.register(registerData);
 
     const fullAddressPayload: AddressRequest = {
       ...addressData,
-      userId: newUserId
+      userId: newUserId,
     };
-    
+
     await this.saveAddress(fullAddressPayload);
   }
 

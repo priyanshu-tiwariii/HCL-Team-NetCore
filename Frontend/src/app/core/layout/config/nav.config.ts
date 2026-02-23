@@ -11,6 +11,12 @@ export const NAV_CONFIG: CustomMenuItem[] = [
     routerLink: '/dashboard',
     module: 'DASHBOARD',
   },
+  {
+    label: 'Orders',
+    icon: 'pi pi-shopping-cart',
+    routerLink: '/orders',
+    module: 'ORDERS',
+  },
 
   {
     separator: true,

@@ -1,3 +1,1 @@
-export interface DashboardState {
-
-}
+export interface DashboardState {}

@@ -1,0 +1,292 @@
+<!-- ══════════════════════════════════════════
+     SKELETON (loading)
+     ══════════════════════════════════════════ -->
+@if (loading()) {
+  <div class="p-6 bg-zinc-50 min-h-full">
+
+    <!-- Header skeleton -->
+    <div class="flex items-center gap-4 mb-6">
+      <p-skeleton shape="circle" size="2.5rem"></p-skeleton>
+      <div class="flex flex-col gap-2">
+        <p-skeleton width="10rem" height="1.5rem"></p-skeleton>
+        <p-skeleton width="8rem" height="0.875rem"></p-skeleton>
+      </div>
+    </div>
+
+    <!-- Summary bar skeleton -->
+    <div class="bg-white border border-zinc-200 rounded-xl shadow-sm p-5 mb-6">
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-6">
+        @for (i of [1,2,3,4]; track i) {
+          <div class="flex flex-col gap-2">
+            <p-skeleton width="55%" height="0.75rem"></p-skeleton>
+            <p-skeleton width="70%" height="1rem"></p-skeleton>
+          </div>
+        }
+      </div>
+    </div>
+
+    <!-- Main grid skeleton -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+      <!-- Left skeleton -->
+      <div class="lg:col-span-2 flex flex-col gap-6">
+
+        <!-- Customer card skeleton -->
+        <div class="bg-white border border-zinc-200 rounded-xl shadow-sm p-6">
+          <p-skeleton width="9rem" height="0.875rem" styleClass="mb-4"></p-skeleton>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
+            @for (i of [1,2,3]; track i) {
+              <div class="flex flex-col gap-2">
+                <p-skeleton width="55%" height="0.75rem"></p-skeleton>
+                <p-skeleton width="75%" height="0.875rem"></p-skeleton>
+              </div>
+            }
+          </div>
+        </div>
+
+        <!-- Items table skeleton -->
+        <div class="bg-white border border-zinc-200 rounded-xl shadow-sm p-6">
+          <p-skeleton width="7rem" height="0.875rem" styleClass="mb-5"></p-skeleton>
+          <!-- Fake header -->
+          <div class="grid grid-cols-4 gap-4 pb-3 mb-2 border-b border-zinc-200">
+            @for (i of [1,2,3,4]; track i) {
+              <p-skeleton width="60%" height="0.75rem"></p-skeleton>
+            }
+          </div>
+          <!-- Fake rows -->
+          @for (i of [1,2,3]; track i) {
+            <div class="grid grid-cols-4 gap-4 py-3 border-b border-zinc-100">
+              <p-skeleton width="80%" height="0.875rem"></p-skeleton>
+              <p-skeleton width="30%" height="0.875rem"></p-skeleton>
+              <p-skeleton width="50%" height="0.875rem"></p-skeleton>
+              <p-skeleton width="50%" height="0.875rem"></p-skeleton>
+            </div>
+          }
+          <!-- Fake total row -->
+          <div class="flex justify-between pt-4">
+            <p-skeleton width="6rem" height="0.875rem"></p-skeleton>
+            <p-skeleton width="4rem" height="1.25rem"></p-skeleton>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right skeleton -->
+      <div class="flex flex-col gap-6">
+        <!-- Status card skeleton -->
+        <div class="bg-white border border-zinc-200 rounded-xl shadow-sm p-6">
+          <p-skeleton width="7rem" height="0.875rem" styleClass="mb-4"></p-skeleton>
+          <p-skeleton width="6rem" height="2rem" borderRadius="2rem" styleClass="mb-5"></p-skeleton>
+          <p-skeleton height="2.5rem" borderRadius="0.5rem" styleClass="mb-3"></p-skeleton>
+          <p-skeleton height="2.5rem" borderRadius="0.5rem"></p-skeleton>
+        </div>
+        <!-- Quick info card skeleton -->
+        <div class="bg-white border border-zinc-200 rounded-xl shadow-sm p-6">
+          <p-skeleton width="5rem" height="0.875rem" styleClass="mb-4"></p-skeleton>
+          @for (i of [1,2,3,4]; track i) {
+            <div class="flex justify-between py-3 border-b border-zinc-100 last:border-b-0">
+              <p-skeleton width="40%" height="0.875rem"></p-skeleton>
+              <p-skeleton width="30%" height="0.875rem"></p-skeleton>
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+
+} @else if (order(); as o) {
+
+<!-- ══════════════════════════════════════════
+     CONTENT
+     ══════════════════════════════════════════ -->
+  <div class="p-6 bg-zinc-50 min-h-full">
+
+    <!-- Back + Page Header -->
+    <div class="flex items-center gap-3 mb-6">
+      <p-button
+        icon="pi pi-arrow-left"
+        [text]="true"
+        [rounded]="true"
+        severity="secondary"
+        routerLink="/orders"
+      ></p-button>
+      <div>
+        <h1 class="text-2xl font-semibold text-zinc-900 tracking-tight">{{ o.id }}</h1>
+        <p class="text-sm text-zinc-500 mt-0.5">Placed on {{ o.orderDate | date:'MMMM d, y · h:mm a' }}</p>
+      </div>
+    </div>
+
+    <!-- ── Top Summary Card ── -->
+    <div class="bg-white border border-zinc-200 rounded-xl shadow-sm p-5 mb-6">
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-6 divide-x divide-zinc-100">
+        <div class="px-4 first:pl-0">
+          <p class="text-xs font-medium text-zinc-400 uppercase tracking-wide mb-1">Order ID</p>
+          <p class="text-sm font-semibold text-zinc-900">{{ o.id }}</p>
+        </div>
+        <div class="px-4">
+          <p class="text-xs font-medium text-zinc-400 uppercase tracking-wide mb-1">Status</p>
+          <p-tag
+            [value]="o.status"
+            [severity]="getStatusSeverity(o.status)"
+            [rounded]="true"
+          ></p-tag>
+        </div>
+        <div class="px-4">
+          <p class="text-xs font-medium text-zinc-400 uppercase tracking-wide mb-1">Total Amount</p>
+          <p class="text-sm font-semibold text-zinc-900">₹{{ o.totalAmount | number }}</p>
+        </div>
+        <div class="px-4">
+          <p class="text-xs font-medium text-zinc-400 uppercase tracking-wide mb-1">Items</p>
+          <p class="text-sm font-semibold text-zinc-900">{{ o.items.length }} item{{ o.items.length !== 1 ? 's' : '' }}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Main Grid ── -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+      <!-- LEFT: Customer Info + Items (span 2) -->
+      <div class="lg:col-span-2 flex flex-col gap-6">
+
+        <!-- Customer Info Card -->
+        <div class="bg-white border border-zinc-200 rounded-xl shadow-sm">
+          <div class="flex items-center gap-2.5 px-6 py-4 border-b border-zinc-100">
+            <i class="pi pi-user text-zinc-400 text-sm"></i>
+            <h2 class="text-sm font-semibold text-zinc-800">Customer Information</h2>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-0 divide-x divide-zinc-100">
+            <div class="px-6 py-5">
+              <p class="text-xs font-medium text-zinc-400 uppercase tracking-wide mb-1.5">Name</p>
+              <p class="text-sm font-medium text-zinc-900">{{ o.customerName }}</p>
+            </div>
+            <div class="px-6 py-5">
+              <p class="text-xs font-medium text-zinc-400 uppercase tracking-wide mb-1.5">Phone</p>
+              <p class="text-sm font-medium text-zinc-900">{{ o.customerPhone }}</p>
+            </div>
+            <div class="px-6 py-5">
+              <p class="text-xs font-medium text-zinc-400 uppercase tracking-wide mb-1.5">Delivery Address</p>
+              <p class="text-sm font-medium text-zinc-900 leading-relaxed">{{ o.deliveryAddress }}</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Order Items Card -->
+        <div class="bg-white border border-zinc-200 rounded-xl shadow-sm overflow-hidden">
+          <div class="flex items-center gap-2.5 px-6 py-4 border-b border-zinc-100">
+            <i class="pi pi-shopping-bag text-zinc-400 text-sm"></i>
+            <h2 class="text-sm font-semibold text-zinc-800">Order Items</h2>
+          </div>
+          <p-table
+            [value]="o.items"
+            [tableStyle]="{ 'min-width': '30rem' }"
+            styleClass="p-datatable-sm"
+          >
+            <ng-template #header>
+              <tr>
+                <th scope="col">Item</th>
+                <th scope="col" class="text-center">Qty</th>
+                <th scope="col" class="text-right">Price</th>
+                <th scope="col" class="text-right">Subtotal</th>
+              </tr>
+            </ng-template>
+            <ng-template #body let-item>
+              <tr>
+                <td class="font-medium text-zinc-900">{{ item.name }}</td>
+                <td class="text-center text-zinc-700">{{ item.quantity }}</td>
+                <td class="text-right text-zinc-500">₹{{ item.price | number }}</td>
+                <td class="text-right font-medium text-zinc-900">₹{{ item.quantity * item.price | number }}</td>
+              </tr>
+            </ng-template>
+          </p-table>
+          <!-- Total footer -->
+          <div class="flex items-center justify-between px-6 py-4 border-t border-zinc-200 bg-zinc-50">
+            <span class="text-sm font-semibold text-zinc-600 uppercase tracking-wide">Total Amount</span>
+            <span class="text-xl font-bold text-zinc-900">₹{{ o.totalAmount | number }}</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- RIGHT: Status & Quick Info -->
+      <div class="flex flex-col gap-6">
+
+        <!-- Status Management Card -->
+        <div class="bg-white border border-zinc-200 rounded-xl shadow-sm overflow-hidden">
+          <div class="flex items-center gap-2.5 px-6 py-4 border-b border-zinc-100">
+            <i class="pi pi-flag text-zinc-400 text-sm"></i>
+            <h2 class="text-sm font-semibold text-zinc-800">Order Status</h2>
+          </div>
+          <div class="p-6">
+
+            <!-- Terminal State Banner -->
+            @if (isTerminal()) {
+              <div class="flex items-start gap-2.5 p-3.5 rounded-lg bg-zinc-100 border border-zinc-200 mb-5">
+                <i class="pi pi-lock text-zinc-500 mt-0.5 text-sm"></i>
+                <p class="text-xs text-zinc-600 leading-relaxed">
+                  This order has reached a terminal state and cannot be modified.
+                </p>
+              </div>
+            }
+
+            <!-- Action Buttons -->
+            <div class="flex flex-col gap-3">
+              @if (nextStatus()) {
+                <p-button
+                  [label]="nextStatusLabel()"
+                  icon="pi pi-arrow-right"
+                  [loading]="updatingStatus()"
+                  [disabled]="isTerminal()"
+                  (onClick)="advanceStatus()"
+                  styleClass="w-full py-2.5! bg-zinc-900! border-none! text-white! font-medium! text-sm! rounded-lg! shadow-sm"
+                ></p-button>
+              }
+              @if (!isTerminal()) {
+                <p-button
+                  label="Cancel Order"
+                  icon="pi pi-times"
+                  severity="danger"
+                  [outlined]="true"
+                  [loading]="updatingStatus()"
+                  [disabled]="!canCancel()"
+                  (onClick)="cancelOrder()"
+                  styleClass="w-full py-2.5! text-sm! font-medium! rounded-lg!"
+                ></p-button>
+                @if (!canCancel()) {
+                  <p class="text-xs text-zinc-400 text-center">
+                    Cancellation is not available for orders that are out for delivery.
+                  </p>
+                }
+              }
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick Info Card -->
+        <div class="bg-white border border-zinc-200 rounded-xl shadow-sm overflow-hidden">
+          <div class="flex items-center gap-2.5 px-6 py-4 border-b border-zinc-100">
+            <i class="pi pi-info-circle text-zinc-400 text-sm"></i>
+            <h2 class="text-sm font-semibold text-zinc-800">Quick Info</h2>
+          </div>
+          <div class="divide-y divide-zinc-100">
+            <div class="flex items-center justify-between px-6 py-3.5">
+              <span class="text-xs text-zinc-500">Order ID</span>
+              <span class="text-sm font-medium text-zinc-900">{{ o.id }}</span>
+            </div>
+            <div class="flex items-center justify-between px-6 py-3.5">
+              <span class="text-xs text-zinc-500">Items Count</span>
+              <span class="text-sm font-medium text-zinc-900">{{ o.items.length }}</span>
+            </div>
+            <div class="flex items-center justify-between px-6 py-3.5">
+              <span class="text-xs text-zinc-500">Placed On</span>
+              <span class="text-sm font-medium text-zinc-900">{{ o.orderDate | date:'MMM d, h:mm a' }}</span>
+            </div>
+            <div class="flex items-center justify-between px-6 py-3.5">
+              <span class="text-xs text-zinc-500">Total</span>
+              <span class="text-sm font-bold text-zinc-900">₹{{ o.totalAmount | number }}</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+}

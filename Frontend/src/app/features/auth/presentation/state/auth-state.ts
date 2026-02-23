@@ -33,18 +33,13 @@ export class AuthState {
     });
   }
 
- 
-
   /**
    * Step 1: Register user and return the new userId.
    */
   async registerUser(data: RegisterRequest): Promise<number | undefined> {
-    return await ExceptionAdapter.guard(
-      { loading: this.loading, error: this.error },
-      async () => {
-        return await this.logic.register(data);
-      }
-    );
+    return await ExceptionAdapter.guard({ loading: this.loading, error: this.error }, async () => {
+      return await this.logic.register(data);
+    });
   }
 
   /**
@@ -57,21 +52,18 @@ export class AuthState {
         await this.logic.saveAddress(data);
         this.toast.success('Account created successfully! Please log in.', 'Welcome');
         return true;
-      }
+      },
     );
     return result === true;
   }
 
   /** @deprecated Use registerUser() + saveAddress() for the 2-page flow. */
   async register(registerData: any, addressData: any, onSuccess: () => void): Promise<void> {
-    await ExceptionAdapter.guard(
-      { loading: this.loading, error: this.error },
-      async () => {
-        await this.logic.registerAndSaveAddress(registerData, addressData);
-        this.toast.success('Account created successfully! Please log in.', 'Welcome');
-        onSuccess();
-      }
-    );
+    await ExceptionAdapter.guard({ loading: this.loading, error: this.error }, async () => {
+      await this.logic.registerAndSaveAddress(registerData, addressData);
+      this.toast.success('Account created successfully! Please log in.', 'Welcome');
+      onSuccess();
+    });
   }
 
   async logout(): Promise<void> {

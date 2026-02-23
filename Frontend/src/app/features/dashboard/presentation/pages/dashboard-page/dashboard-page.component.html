@@ -1,5 +1,4 @@
 <div class="p-6 bg-zinc-50 min-h-full">
-
   <!-- Page Header -->
   <div class="mb-6">
     <h1 class="text-2xl font-semibold text-zinc-900 tracking-tight">Dashboard</h1>
@@ -10,22 +9,30 @@
   @if (metrics()) {
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
       @for (card of metricCards; track card.key; let i = $index) {
-        <div class="bg-white border border-zinc-200 rounded-xl p-5 shadow-sm flex items-start gap-4 hover:shadow-md transition-shadow">
-          <div class="h-10 w-10 rounded-lg flex items-center justify-center shrink-0"
+        <div
+          class="bg-white border border-zinc-200 rounded-xl p-5 shadow-sm flex items-start gap-4 hover:shadow-md transition-shadow"
+        >
+          <div
+            class="h-10 w-10 rounded-lg flex items-center justify-center shrink-0"
             [ngClass]="{
               'bg-zinc-900': i === 0,
               'bg-zinc-700': i === 1,
               'bg-zinc-500': i === 2,
-              'bg-zinc-300': i === 3
-            }">
-            <i [class]="card.icon + ' text-lg'"
+              'bg-zinc-300': i === 3,
+            }"
+          >
+            <i
+              [class]="card.icon + ' text-lg'"
               [ngClass]="{
                 'text-white': i < 3,
-                'text-zinc-700': i === 3
-              }"></i>
+                'text-zinc-700': i === 3,
+              }"
+            ></i>
           </div>
           <div class="min-w-0 flex-1">
-            <p class="text-xs font-medium text-zinc-500 uppercase tracking-wide">{{ card.label }}</p>
+            <p class="text-xs font-medium text-zinc-500 uppercase tracking-wide">
+              {{ card.label }}
+            </p>
             <p class="text-2xl font-bold text-zinc-900 mt-1 tracking-tight">
               {{ card.prefix }}{{ getMetricValue(card.key) | number }}
             </p>
@@ -37,7 +44,6 @@
 
   <!-- Charts Row -->
   <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
-
     <!-- Revenue Chart (spans 2 cols) -->
     <div class="lg:col-span-2 bg-white border border-zinc-200 rounded-xl shadow-sm p-6">
       <div class="flex items-center justify-between mb-6">
@@ -92,28 +98,36 @@
     >
       <ng-template #header>
         <tr>
-          <th scope="col" class="text-xs! font-semibold! uppercase! tracking-wide! text-zinc-400! bg-zinc-50! border-b! border-zinc-200!">Order ID</th>
-          <th scope="col" class="text-xs! font-semibold! uppercase! tracking-wide! text-zinc-400! bg-zinc-50! border-b! border-zinc-200!">Customer</th>
-          <th scope="col" class="text-xs! font-semibold! uppercase! tracking-wide! text-zinc-400! bg-zinc-50! border-b! border-zinc-200!">Items</th>
-          <th scope="col" class="text-xs! font-semibold! uppercase! tracking-wide! text-zinc-400! bg-zinc-50! border-b! border-zinc-200!">Amount</th>
-          <th scope="col" class="text-xs! font-semibold! uppercase! tracking-wide! text-zinc-400! bg-zinc-50! border-b! border-zinc-200!">Status</th>
-          <th scope="col" class="text-xs! font-semibold! uppercase! tracking-wide! text-zinc-400! bg-zinc-50! border-b! border-zinc-200!">Actions</th>
+          <th scope="col">Order ID</th>
+          <th scope="col">Customer</th>
+          <th scope="col">Items</th>
+          <th scope="col">Amount</th>
+          <th scope="col">Status</th>
+          <th scope="col">Actions</th>
         </tr>
       </ng-template>
       <ng-template #body let-order>
-        <tr class="bg-white! hover:bg-zinc-50! border-b! border-zinc-100! transition-colors">
-          <td class="bg-white! text-sm! font-medium! text-zinc-900! border-zinc-100! py-3!">{{ order.id }}</td>
-          <td class="bg-white! text-sm! text-zinc-700! border-zinc-100! py-3!">{{ order.customerName }}</td>
-          <td class="bg-white! text-sm! text-zinc-500! border-zinc-100! py-3!">{{ order.items }}</td>
-          <td class="bg-white! text-sm! font-semibold! text-zinc-900! border-zinc-100! py-3!">₹{{ order.totalAmount | number }}</td>
-          <td class="bg-white! border-zinc-100! py-3!">
+        <tr class="hover:bg-zinc-50! border-b! border-zinc-100! transition-colors">
+          <td class="text-sm! font-medium! text-zinc-800!">
+            {{ order.id }}
+          </td>
+          <td class="text-sm! text-zinc-600!">
+            {{ order.customerName }}
+          </td>
+          <td class="text-sm! text-zinc-500!">
+            {{ order.items }}
+          </td>
+          <td class="text-sm! font-semibold! text-zinc-800!">
+            ₹{{ order.totalAmount | number }}
+          </td>
+          <td>
             <p-tag
               [value]="order.status"
               [severity]="getStatusSeverity(order.status)"
               [rounded]="true"
             ></p-tag>
           </td>
-          <td class="bg-white! border-zinc-100! py-3!">
+          <td>
             @if (getNextStatus(order.status)) {
               <p-button
                 [label]="'Mark ' + getNextStatus(order.status)"
@@ -136,5 +150,4 @@
       </ng-template>
     </p-table>
   </div>
-
 </div>

@@ -106,14 +106,14 @@ export class DashboardPageComponent implements OnInit {
     return (m as any)[key] ?? 0;
   }
 
-  getStatusSeverity(status: string): 'warn' | 'info' | 'success' | 'secondary' {
+  getStatusSeverity(status: string): 'warn' | 'info' | 'success' | 'contrast' {
     switch (status) {
       case 'Pending':
         return 'warn';
       case 'Preparing':
         return 'info';
       case 'Out for Delivery':
-        return 'secondary';
+        return 'contrast';
       case 'Delivered':
         return 'success';
       default:
@@ -127,7 +127,7 @@ export class DashboardPageComponent implements OnInit {
 
   updateOrderStatus(orderId: string, newStatus: string): void {
     this.recentOrders.update((orders) =>
-      orders.map((o) => (o.id === orderId ? { ...o, status: newStatus as OrderStatus } : o))
+      orders.map((o) => (o.id === orderId ? { ...o, status: newStatus as OrderStatus } : o)),
     );
   }
 }

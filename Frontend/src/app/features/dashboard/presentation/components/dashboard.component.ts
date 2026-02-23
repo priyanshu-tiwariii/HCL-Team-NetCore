@@ -1,3 +1,1 @@
-export class DashboardComponent {
-
-}
+export class DashboardComponent {}

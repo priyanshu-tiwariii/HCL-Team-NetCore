@@ -21,7 +21,6 @@
 
     <!-- Form -->
     <form [formGroup]="addressForm" (ngSubmit)="onSubmit()" class="flex flex-col gap-5">
-
       <!-- Address Detail -->
       <div class="flex flex-col gap-1.5">
         <label for="addressDetail" class="text-[13px] font-medium text-zinc-700">Address</label>
@@ -34,10 +33,13 @@
           class="w-full !px-3 !py-2.5 !text-sm !bg-white !border-zinc-300 !text-zinc-900 placeholder:!text-zinc-400 hover:!border-zinc-400 focus:!border-zinc-900 focus:!ring-1 focus:!ring-zinc-900 transition-all rounded-lg"
           [ngClass]="{
             '!border-red-500 focus:!border-red-500 focus:!ring-red-500':
-              addressForm.get('addressDetail')?.invalid && addressForm.get('addressDetail')?.touched
+              addressForm.get('addressDetail')?.invalid &&
+              addressForm.get('addressDetail')?.touched,
           }"
         />
-        @if (addressForm.get('addressDetail')?.invalid && addressForm.get('addressDetail')?.touched) {
+        @if (
+          addressForm.get('addressDetail')?.invalid && addressForm.get('addressDetail')?.touched
+        ) {
           <div class="flex items-center gap-1 mt-0.5 text-red-500">
             <i class="pi pi-exclamation-circle text-[11px]"></i>
             <small class="text-xs font-medium">Address is required.</small>
@@ -59,7 +61,7 @@
             class="w-full !px-3 !py-2.5 !text-sm !bg-white !border-zinc-300 !text-zinc-900 placeholder:!text-zinc-400 hover:!border-zinc-400 focus:!border-zinc-900 focus:!ring-1 focus:!ring-zinc-900 transition-all rounded-lg"
             [ngClass]="{
               '!border-red-500 focus:!border-red-500 focus:!ring-red-500':
-                addressForm.get('city')?.invalid && addressForm.get('city')?.touched
+                addressForm.get('city')?.invalid && addressForm.get('city')?.touched,
             }"
           />
           @if (addressForm.get('city')?.invalid && addressForm.get('city')?.touched) {
@@ -82,7 +84,7 @@
             class="w-full !px-3 !py-2.5 !text-sm !bg-white !border-zinc-300 !text-zinc-900 placeholder:!text-zinc-400 hover:!border-zinc-400 focus:!border-zinc-900 focus:!ring-1 focus:!ring-zinc-900 transition-all rounded-lg"
             [ngClass]="{
               '!border-red-500 focus:!border-red-500 focus:!ring-red-500':
-                addressForm.get('state')?.invalid && addressForm.get('state')?.touched
+                addressForm.get('state')?.invalid && addressForm.get('state')?.touched,
             }"
           />
           @if (addressForm.get('state')?.invalid && addressForm.get('state')?.touched) {
@@ -108,7 +110,7 @@
             class="w-full !px-3 !py-2.5 !text-sm !bg-white !border-zinc-300 !text-zinc-900 placeholder:!text-zinc-400 hover:!border-zinc-400 focus:!border-zinc-900 focus:!ring-1 focus:!ring-zinc-900 transition-all rounded-lg"
             [ngClass]="{
               '!border-red-500 focus:!border-red-500 focus:!ring-red-500':
-                addressForm.get('country')?.invalid && addressForm.get('country')?.touched
+                addressForm.get('country')?.invalid && addressForm.get('country')?.touched,
             }"
           />
           @if (addressForm.get('country')?.invalid && addressForm.get('country')?.touched) {
@@ -131,7 +133,7 @@
             class="w-full !px-3 !py-2.5 !text-sm !bg-white !border-zinc-300 !text-zinc-900 placeholder:!text-zinc-400 hover:!border-zinc-400 focus:!border-zinc-900 focus:!ring-1 focus:!ring-zinc-900 transition-all rounded-lg"
             [ngClass]="{
               '!border-red-500 focus:!border-red-500 focus:!ring-red-500':
-                addressForm.get('pincode')?.invalid && addressForm.get('pincode')?.touched
+                addressForm.get('pincode')?.invalid && addressForm.get('pincode')?.touched,
             }"
           />
           @if (addressForm.get('pincode')?.invalid && addressForm.get('pincode')?.touched) {
@@ -156,7 +158,9 @@
     <!-- Footer -->
     <div class="mt-6 text-center">
       <p class="text-sm text-zinc-500">
-        <a routerLink="/signup" class="font-medium text-zinc-900 hover:underline">&larr; Back to Sign Up</a>
+        <a routerLink="/signup" class="font-medium text-zinc-900 hover:underline"
+          >&larr; Back to Sign Up</a
+        >
       </p>
     </div>
   </div>
