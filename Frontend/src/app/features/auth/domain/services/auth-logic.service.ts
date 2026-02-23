@@ -33,11 +33,7 @@ export class AuthLogic {
     await this.network.saveAddress(data);
   }
 
-  /**
-   * Orchestrates the 2-step Registration Process:
-   * 1. Register the User -> Get UserId
-   * 2. Save the Address using the new UserId
-   */
+  
   async registerAndSaveAddress(
     registerData: RegisterRequest,
     addressData: Omit<AddressRequest, 'userId'>,
