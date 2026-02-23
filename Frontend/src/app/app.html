@@ -1,0 +1,28 @@
+<p-toast position="top-right" key="crm">
+  <ng-template let-message pTemplate="message">
+    <div class="crm-toast">
+      <i
+        class="pi crm-toast-icon"
+        [ngClass]="{
+          'pi-check-circle': message.severity === 'success',
+          'pi-times-circle': message.severity === 'error',
+          'pi-exclamation-triangle': message.severity === 'warn',
+          'pi-info-circle': message.severity === 'info',
+        }"
+      >
+      </i>
+
+      <div class="crm-toast-text">
+        <div class="crm-toast-title">
+          {{ message.summary }}
+        </div>
+
+        <div class="crm-toast-desc">
+          {{ message.detail }}
+        </div>
+      </div>
+    </div>
+  </ng-template>
+</p-toast>
+
+<router-outlet></router-outlet>

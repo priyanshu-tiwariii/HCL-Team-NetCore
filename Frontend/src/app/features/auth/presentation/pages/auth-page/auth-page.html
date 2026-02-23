@@ -1,0 +1,90 @@
+<div
+  class="min-h-screen flex flex-col items-center justify-center bg-zinc-50 px-4 sm:px-6 lg:px-8 font-sans"
+>
+  <div
+    class="w-full max-w-[400px] bg-white border border-zinc-200/80 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] p-8 flex flex-col"
+  >
+    <div class="flex justify-center mb-6">
+      <div
+        class="h-12 w-12 bg-zinc-900 rounded-xl shadow-md flex items-center justify-center ring-1 ring-zinc-900/5"
+      >
+        <span class="text-white text-xl font-bold tracking-tighter">C</span>
+      </div>
+    </div>
+
+    <div class="text-center mb-8">
+      <h1 class="text-2xl font-semibold text-zinc-900 tracking-tight mb-1.5">Welcome back</h1>
+      <p class="text-sm text-zinc-500">Enter your credentials to access your account</p>
+    </div>
+
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="flex flex-col gap-5">
+      <div class="flex flex-col gap-1.5">
+        <label for="email" class="text-[13px] font-medium text-zinc-700">Email Address</label>
+        <input
+          id="email"
+          type="email"
+          pInputText
+          formControlName="email"
+          placeholder="name@company.com"
+          class="w-full !px-3 !py-2.5 !text-sm !bg-white !border-zinc-300 !text-zinc-900 placeholder:!text-zinc-400 hover:!border-zinc-400 focus:!border-zinc-900 focus:!ring-1 focus:!ring-zinc-900 transition-all rounded-lg"
+          [ngClass]="{
+            '!border-red-500 focus:!border-red-500 focus:!ring-red-500':
+              loginForm.get('email')?.invalid && loginForm.get('email')?.touched,
+          }"
+        />
+        @if (loginForm.get('email')?.invalid && loginForm.get('email')?.touched) {
+          <div class="flex items-center gap-1 mt-0.5 text-red-500">
+            <i class="pi pi-exclamation-circle text-[11px]"></i>
+            <small class="text-xs font-medium">A valid email is required.</small>
+          </div>
+        }
+      </div>
+
+      <div class="flex flex-col gap-1.5">
+        <label for="password" class="text-[13px] font-medium text-zinc-700">Password</label>
+
+        <p-password
+          id="password"
+          formControlName="password"
+          [toggleMask]="true"
+          [feedback]="false"
+          placeholder="••••••••"
+          styleClass="w-full"
+          inputStyleClass="w-full !px-3 !py-2.5 !text-sm !bg-white !border-zinc-300 !text-zinc-900 placeholder:!text-zinc-400 hover:!border-zinc-400 focus:!border-zinc-900 focus:!ring-1 focus:!ring-zinc-900 transition-all rounded-lg"
+          [ngClass]="{
+            '!border-red-500 focus:!border-red-500 focus:!ring-red-500':
+              loginForm.get('password')?.invalid && loginForm.get('password')?.touched,
+          }"
+        >
+        </p-password>
+
+        @if (loginForm.get('password')?.invalid && loginForm.get('password')?.touched) {
+          <div class="flex items-center gap-1 mt-0.5 text-red-500">
+            <i class="pi pi-exclamation-circle text-[11px]"></i>
+            <small class="text-xs font-medium">Password must be at least 6 characters.</small>
+          </div>
+        }
+      </div>
+
+      <p-button
+        type="submit"
+        label="Sign In"
+        [loading]="state.loading()"
+        styleClass="w-full !mt-2 !py-2.5 !bg-zinc-900 hover:!bg-zinc-800 !border-none !text-white !font-medium !text-sm rounded-lg shadow-sm transition-all"
+      >
+      </p-button>
+    </form>
+
+    <!-- Sign Up Link -->
+    <div class="mt-6 text-center">
+      <p class="text-sm text-zinc-500">
+        Don't have an account?
+        <a routerLink="/signup" class="font-medium text-zinc-900 hover:underline">Sign Up</a>
+      </p>
+    </div>
+  </div>
+
+  <div class="mt-8 text-center text-[12px] font-medium text-zinc-400">
+    <p>Secure Enterprise Portal &copy; 2026</p>
+  </div>
+</div>

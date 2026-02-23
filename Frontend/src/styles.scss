@@ -1,0 +1,486 @@
+/* =====================================
+   REMOVE ALL PRIMENG DEFAULT STYLE
+   ===================================== */
+
+.p-toast {
+  .p-toast-message {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+  }
+
+  .p-toast-message-content {
+    padding: 0 !important;
+    background: transparent !important;
+  }
+
+  button.p-toast-icon-close {
+    display: none !important;
+  }
+
+  .p-toast-message-icon {
+    display: none !important;
+  }
+}
+
+/* =====================================
+   CRM CUSTOM TOAST
+   ===================================== */
+
+.crm-toast {
+  width: 380px;
+
+  display: grid;
+
+  grid-template-columns: 18px 1fr 18px;
+
+  align-items: center;
+
+  gap: 12px;
+
+  background: #18181b;
+
+  border: 1px solid #27272a;
+
+  border-radius: 8px;
+
+  padding: 12px 16px;
+
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+}
+
+/* ICON */
+
+.crm-toast-icon {
+  font-size: 16px;
+
+  color: #fafafa;
+}
+
+/* TEXT */
+
+.crm-toast-text {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 2px;
+}
+
+.crm-toast-title {
+  font-size: 13px;
+
+  font-weight: 600;
+
+  color: #fafafa !important;
+}
+
+.crm-toast-desc {
+  font-size: 12px;
+
+  color: #a1a1aa;
+}
+
+/* CLOSE BUTTON */
+
+.crm-toast-close {
+  font-size: 14px;
+
+  color: #71717a;
+
+  cursor: pointer;
+
+  transition: color 0.15s;
+}
+
+.crm-toast-close:hover {
+  color: #fafafa;
+}
+
+/* =====================================
+   SMOOTH ANIMATION
+   ===================================== */
+
+.p-toast-message {
+  animation: crm-toast-slide 0.2s ease;
+}
+
+@keyframes crm-toast-slide {
+  from {
+    transform: translateY(-10px);
+
+    opacity: 0;
+  }
+
+  to {
+    transform: translateY(0);
+
+    opacity: 1;
+  }
+}
+
+.p-toast button,
+.p-toast .p-toast-icon-close {
+  display: none !important;
+}
+
+@custom-variant dark (&:is(.dark *));
+
+/* Map your Noir Zinc Theme surface colors to Tailwind for easy use in HTML if needed */
+@theme {
+  --color-primary-50: var(--p-primary-50);
+  --color-primary-500: var(--p-primary-500);
+  --color-primary-600: var(--p-primary-600);
+  --color-primary-900: var(--p-primary-900);
+
+  --color-surface-0: var(--p-surface-0); /* Pure White in light, Zinc 950 in dark */
+  --color-surface-50: var(--p-surface-50); /* Slightly off-white */
+  --color-surface-100: var(--p-surface-100);
+  --color-surface-800: var(--p-surface-800);
+  --color-surface-900: var(--p-surface-900);
+}
+
+@layer base {
+  body {
+    /* THIS IS THE MAGIC LINE! 
+       It applies the theme's default background to the whole app.
+       If you want it slightly gray, change it to var(--p-surface-50) 
+    */
+    background-color: var(--p-surface-0);
+
+    /* Applies the theme's default text color */
+    color: var(--p-text-color);
+
+    font-family: ui-sans-serif, system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+
+    /* Smooth transition when switching themes */
+    transition:
+      background-color 0.2s,
+      color 0.2s;
+
+    /* Ensures the body always fills the screen */
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+/* ==========================================================
+   PRIMENG DATATABLE — Clean Light Overrides
+   ========================================================== */
+.p-datatable {
+  /* Table wrapper */
+  .p-datatable-table-container {
+    background-color: #ffffff !important;
+  }
+
+  /* Header cells */
+  .p-datatable-thead > tr > th,
+  .p-datatable-header-cell {
+    background-color: #fafafa !important;
+    color: #71717a !important;
+    font-size: 0.75rem !important;
+    font-weight: 600 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.04em;
+    border-bottom: 1px solid #e4e4e7 !important;
+    border-top: none !important;
+    padding: 10px 16px !important;
+  }
+
+  /* Body rows */
+  .p-datatable-tbody > tr {
+    background-color: #ffffff !important;
+    border-bottom: 1px solid #f4f4f5 !important;
+    transition: background-color 0.15s ease;
+
+    &:hover {
+      background-color: #f9fafb !important;
+    }
+
+    > td {
+      color: #3f3f46 !important;
+      background-color: #ffffff !important;
+      border-bottom: 1px solid #f4f4f5 !important;
+      padding: 12px 16px !important;
+      font-size: 0.875rem !important;
+    }
+  }
+
+  .p-datatable-tbody > tr:last-child {
+    border-bottom: none !important;
+
+    > td {
+      border-bottom: none !important;
+    }
+  }
+
+  /* Footer */
+  .p-datatable-tfoot > tr > td {
+    background-color: #fafafa !important;
+    color: #3f3f46 !important;
+    border-top: 1px solid #e4e4e7 !important;
+  }
+}
+
+/* ==========================================================
+   PRIMENG PAGINATOR — Clean Light Overrides
+   ========================================================== */
+.p-paginator {
+  background-color: #fafafa !important;
+  border-top: 1px solid #e4e4e7 !important;
+  border-bottom: none !important;
+  padding: 8px 16px !important;
+  border-radius: 0 0 12px 12px !important;
+
+  .p-paginator-page,
+  .p-paginator-first,
+  .p-paginator-prev,
+  .p-paginator-next,
+  .p-paginator-last {
+    color: #71717a !important;
+    background: transparent !important;
+    border: none !important;
+    min-width: 2rem !important;
+    height: 2rem !important;
+
+    &:hover {
+      background-color: #e4e4e7 !important;
+      color: #18181b !important;
+    }
+
+    &.p-paginator-page-selected,
+    &.p-highlight {
+      background-color: #18181b !important;
+      color: #ffffff !important;
+      border-radius: 6px !important;
+    }
+  }
+
+  /* Rows-per-page dropdown inside paginator */
+  .p-select,
+  .p-paginator-rpp-options {
+    background-color: #ffffff !important;
+    border: 1px solid #d4d4d8 !important;
+    color: #18181b !important;
+    border-radius: 6px !important;
+    min-width: 5rem !important;
+  }
+
+  /* Force label & icon color inside the rows-per-page select */
+  .p-select .p-select-label {
+    color: #18181b !important;
+    font-size: 0.875rem !important;
+  }
+
+  .p-select .p-select-dropdown-icon,
+  .p-select .p-icon {
+    color: #71717a !important;
+  }
+}
+
+/* ==========================================================
+   PRIMENG SELECT — Clean Light Overrides
+   ========================================================== */
+.p-select-overlay,
+.p-select-list-container {
+  background-color: #ffffff !important;
+  border: 1px solid #e4e4e7 !important;
+  border-radius: 8px !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08) !important;
+}
+
+.p-select-option {
+  color: #3f3f46 !important;
+
+  &:hover,
+  &.p-focus {
+    background-color: #f4f4f5 !important;
+    color: #18181b !important;
+  }
+
+  &.p-select-option-selected,
+  &.p-highlight {
+    background-color: #f4f4f5 !important;
+    color: #18181b !important;
+    font-weight: 600 !important;
+  }
+}
+
+/* Loading overlay */
+.p-datatable .p-datatable-loading-overlay {
+  background-color: rgba(255, 255, 255, 0.7) !important;
+}
+
+/* ==========================================================
+   PRIMENG DIALOG — Clean Light Overrides
+   ========================================================== */
+.p-dialog {
+  background-color: #ffffff !important;
+  border: 1px solid #e4e4e7 !important;
+  border-radius: 12px !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12) !important;
+
+  /* Header */
+  .p-dialog-header {
+    background-color: #ffffff !important;
+    border-bottom: 1px solid #f4f4f5 !important;
+    border-radius: 12px 12px 0 0 !important;
+    padding: 20px 24px 16px !important;
+
+    .p-dialog-title {
+      color: #18181b !important;
+      font-size: 1rem !important;
+      font-weight: 600 !important;
+    }
+
+    .p-dialog-header-actions button,
+    .p-dialog-close-button {
+      color: #71717a !important;
+      background: transparent !important;
+      border: none !important;
+
+      &:hover {
+        background-color: #f4f4f5 !important;
+        color: #18181b !important;
+      }
+    }
+  }
+
+  /* Content */
+  .p-dialog-content {
+    background-color: #ffffff !important;
+    color: #3f3f46 !important;
+    padding: 20px 24px !important;
+  }
+
+  /* Footer */
+  .p-dialog-footer {
+    background-color: #fafafa !important;
+    border-top: 1px solid #f4f4f5 !important;
+    border-radius: 0 0 12px 12px !important;
+    padding: 14px 24px !important;
+  }
+}
+
+/* Overlay mask stays dark/translucent — that's correct */
+.p-dialog-mask {
+  background-color: rgba(0, 0, 0, 0.4) !important;
+}
+
+/* ==========================================================
+   PRIMENG INPUTS inside dialogs (and globally) — Light mode
+   ========================================================== */
+
+/* InputText */
+.p-inputtext {
+  background-color: #ffffff !important;
+  border: 1px solid #d4d4d8 !important;
+  color: #18181b !important;
+  border-radius: 8px !important;
+  font-size: 0.875rem !important;
+
+  &::placeholder {
+    color: #a1a1aa !important;
+  }
+
+  &:focus,
+  &:focus-within {
+    border-color: #a1a1aa !important;
+    box-shadow: 0 0 0 2px rgba(161, 161, 170, 0.2) !important;
+    outline: none !important;
+  }
+
+  &.ng-invalid.ng-dirty {
+    border-color: #ef4444 !important;
+  }
+}
+
+/* Textarea */
+.p-textarea,
+textarea.p-inputtext {
+  background-color: #ffffff !important;
+  border: 1px solid #d4d4d8 !important;
+  color: #18181b !important;
+  border-radius: 8px !important;
+  font-size: 0.875rem !important;
+
+  &::placeholder {
+    color: #a1a1aa !important;
+  }
+
+  &:focus {
+    border-color: #a1a1aa !important;
+    box-shadow: 0 0 0 2px rgba(161, 161, 170, 0.2) !important;
+    outline: none !important;
+  }
+}
+
+/* InputNumber */
+.p-inputnumber {
+  .p-inputnumber-input {
+    background-color: #ffffff !important;
+    border: 1px solid #d4d4d8 !important;
+    color: #18181b !important;
+    border-radius: 8px !important;
+    font-size: 0.875rem !important;
+
+    &::placeholder {
+      color: #a1a1aa !important;
+    }
+
+    &:focus {
+      border-color: #a1a1aa !important;
+      box-shadow: 0 0 0 2px rgba(161, 161, 170, 0.2) !important;
+      outline: none !important;
+    }
+  }
+
+  &.ng-invalid.ng-dirty .p-inputnumber-input {
+    border-color: #ef4444 !important;
+  }
+}
+
+/* Select (dropdown) inside dialogs*/
+.p-select {
+  background-color: #ffffff !important;
+  border: 1px solid #d4d4d8 !important;
+  border-radius: 8px !important;
+
+  .p-select-label {
+    color: #18181b !important;
+    font-size: 0.875rem !important;
+  }
+
+  .p-select-dropdown-icon,
+  .p-icon {
+    color: #71717a !important;
+  }
+
+  &:hover {
+    border-color: #a1a1aa !important;
+  }
+
+  &.ng-invalid.ng-dirty {
+    border-color: #ef4444 !important;
+  }
+}
+
+/* ToggleSwitch  */
+.p-toggleswitch {
+  .p-toggleswitch-slider {
+    background-color: #d4d4d8 !important;
+    border: none !important;
+  }
+
+  &.p-toggleswitch-checked .p-toggleswitch-slider {
+    background-color: #18181b !important;
+  }
+}
+
+/* ==========================================================
+   PRIMENG TOAST OVERRIDES (Solid Fill, White Text Style)
+   ... (keep your existing Toast CSS here) ...
+   ========================================================== */

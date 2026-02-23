@@ -1,0 +1,147 @@
+<div
+  class="min-h-screen flex flex-col items-center justify-center bg-zinc-50 px-4 sm:px-6 lg:px-8 font-sans"
+>
+  <div
+    class="w-full max-w-[400px] bg-white border border-zinc-200/80 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] p-8 flex flex-col"
+  >
+    <!-- Logo -->
+    <div class="flex justify-center mb-6">
+      <div
+        class="h-12 w-12 bg-zinc-900 rounded-xl shadow-md flex items-center justify-center ring-1 ring-zinc-900/5"
+      >
+        <span class="text-white text-xl font-bold tracking-tighter">C</span>
+      </div>
+    </div>
+
+    <!-- Header -->
+    <div class="text-center mb-8">
+      <h1 class="text-2xl font-semibold text-zinc-900 tracking-tight mb-1.5">Delivery Address</h1>
+      <p class="text-sm text-zinc-500">Where should we deliver your orders?</p>
+    </div>
+
+    <!-- Form -->
+    <form [formGroup]="addressForm" (ngSubmit)="onSubmit()" class="flex flex-col gap-5">
+      <!-- Address Detail -->
+      <div class="flex flex-col gap-1.5">
+        <label for="addressDetail" class="text-[13px] font-medium text-zinc-700">Address</label>
+        <input
+          id="addressDetail"
+          type="text"
+          pInputText
+          formControlName="addressDetail"
+          placeholder="123, Main Street, Apt 4B"
+          class="w-full !px-3 !py-2.5 !text-sm !bg-white !border-zinc-300 !text-zinc-900 placeholder:!text-zinc-400 hover:!border-zinc-400 focus:!border-zinc-900 focus:!ring-1 focus:!ring-zinc-900 transition-all rounded-lg"
+          [ngClass]="{
+            '!border-red-500 focus:!border-red-500 focus:!ring-red-500':
+              addressForm.get('addressDetail')?.invalid &&
+              addressForm.get('addressDetail')?.touched,
+          }"
+        />
+        @if (
+          addressForm.get('addressDetail')?.invalid && addressForm.get('addressDetail')?.touched
+        ) {
+          <div class="flex items-center gap-1 mt-0.5 text-red-500">
+            <i class="pi pi-exclamation-circle text-[11px]"></i>
+            <small class="text-xs font-medium">Address is required.</small>
+          </div>
+        }
+      </div>
+
+      <!-- City / State (2 columns) -->
+      <div class="grid grid-cols-2 gap-4">
+        <!-- City -->
+        <div class="flex flex-col gap-1.5">
+          <label for="city" class="text-[13px] font-medium text-zinc-700">City</label>
+          <input
+            id="city"
+            type="text"
+            pInputText
+            formControlName="city"
+            placeholder="Mumbai"
+            class="w-full !px-3 !py-2.5 !text-sm !bg-white !border-zinc-300 !text-zinc-900 placeholder:!text-zinc-400 hover:!border-zinc-400 focus:!border-zinc-900 focus:!ring-1 focus:!ring-zinc-900 transition-all rounded-lg"
+            [ngClass]="{
+              '!border-red-500 focus:!border-red-500 focus:!ring-red-500':
+                addressForm.get('city')?.invalid && addressForm.get('city')?.touched,
+            }"
+          />
+          @if (addressForm.get('city')?.invalid && addressForm.get('city')?.touched) {
+            <div class="flex items-center gap-1 mt-0.5 text-red-500">
+              <i class="pi pi-exclamation-circle text-[11px]"></i>
+              <small class="text-xs font-medium">City is required.</small>
+            </div>
+          }
+        </div>
+
+        <!-- State -->
+        <div class="flex flex-col gap-1.5">
+          <label for="state" class="text-[13px] font-medium text-zinc-700">State</label>
+          <input
+            id="state"
+            type="text"
+            pInputText
+            formControlName="state"
+            placeholder="Maharashtra"
+            class="w-full !px-3 !py-2.5 !text-sm !bg-white !border-zinc-300 !text-zinc-900 placeholder:!text-zinc-400 hover:!border-zinc-400 focus:!border-zinc-900 focus:!ring-1 focus:!ring-zinc-900 transition-all rounded-lg"
+            [ngClass]="{
+              '!border-red-500 focus:!border-red-500 focus:!ring-red-500':
+                addressForm.get('state')?.invalid && addressForm.get('state')?.touched,
+            }"
+          />
+          @if (addressForm.get('state')?.invalid && addressForm.get('state')?.touched) {
+            <div class="flex items-center gap-1 mt-0.5 text-red-500">
+              <i class="pi pi-exclamation-circle text-[11px]"></i>
+              <small class="text-xs font-medium">State is required.</small>
+            </div>
+          }
+        </div>
+      </div>
+
+      <!-- Pincode -->
+      <div class="grid grid-cols-2 gap-4">
+        <div class="flex flex-col gap-1.5">
+          <label for="pincode" class="text-[13px] font-medium text-zinc-700">Pincode</label>
+          <input
+            id="pincode"
+            type="text"
+            pInputText
+            formControlName="pincode"
+            placeholder="400001"
+            class="w-full !px-3 !py-2.5 !text-sm !bg-white !border-zinc-300 !text-zinc-900 placeholder:!text-zinc-400 hover:!border-zinc-400 focus:!border-zinc-900 focus:!ring-1 focus:!ring-zinc-900 transition-all rounded-lg"
+            [ngClass]="{
+              '!border-red-500 focus:!border-red-500 focus:!ring-red-500':
+                addressForm.get('pincode')?.invalid && addressForm.get('pincode')?.touched,
+            }"
+          />
+          @if (addressForm.get('pincode')?.invalid && addressForm.get('pincode')?.touched) {
+            <div class="flex items-center gap-1 mt-0.5 text-red-500">
+              <i class="pi pi-exclamation-circle text-[11px]"></i>
+              <small class="text-xs font-medium">A valid 6-digit pincode is required.</small>
+            </div>
+          }
+        </div>
+      </div>
+
+      <!-- Submit -->
+      <p-button
+        type="submit"
+        label="Complete Registration"
+        [loading]="state.loading()"
+        styleClass="w-full !mt-2 !py-2.5 !bg-zinc-900 hover:!bg-zinc-800 !border-none !text-white !font-medium !text-sm rounded-lg shadow-sm transition-all"
+      >
+      </p-button>
+    </form>
+
+    <!-- Footer -->
+    <div class="mt-6 text-center">
+      <p class="text-sm text-zinc-500">
+        <a routerLink="/signup" class="font-medium text-zinc-900 hover:underline"
+          >&larr; Back to Sign Up</a
+        >
+      </p>
+    </div>
+  </div>
+
+  <div class="mt-8 text-center text-[12px] font-medium text-zinc-400">
+    <p>Secure Enterprise Portal &copy; 2026</p>
+  </div>
+</div>

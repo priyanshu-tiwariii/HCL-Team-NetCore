@@ -1,0 +1,285 @@
+<div class="min-h-full bg-zinc-50">
+
+  <!-- ═══════════ FLOATING CART INDICATOR ═══════════ -->
+  @if (cartState.cartCount() > 0) {
+    <div class="fixed bottom-6 right-6 z-50">
+      <button
+        class="relative flex items-center gap-2.5 bg-zinc-900 text-white pl-4 pr-5 py-3 rounded-full shadow-lg hover:bg-zinc-800 transition-colors cursor-pointer"
+      >
+        <i class="pi pi-shopping-cart text-base"></i>
+        <span class="text-sm font-semibold">₹{{ cartState.cartTotal() | number }}</span>
+        <span
+          class="absolute -top-1.5 -right-1.5 flex items-center justify-center w-5 h-5 rounded-full bg-red-500 text-[10px] font-bold text-white"
+        >
+          {{ cartState.cartCount() }}
+        </span>
+      </button>
+    </div>
+  }
+
+  <!-- ═══════════ HERO SECTION ═══════════ -->
+  <div class="px-6 pt-8 pb-4">
+    <h1 class="text-3xl font-bold text-zinc-900 tracking-tight">What are you craving today?</h1>
+    <p class="text-sm text-zinc-500 mt-1.5">Fresh, delicious food delivered to your doorstep</p>
+  </div>
+
+  <!-- ═══════════ STICKY FILTER BAR ═══════════ -->
+  <div class="sticky top-0 z-40 bg-zinc-50/95 backdrop-blur-sm border-b border-zinc-200 px-6 py-4">
+    <div class="flex flex-col gap-4">
+
+      <!-- Search -->
+      <div class="relative w-full max-w-xl">
+        <i class="pi pi-search absolute left-3.5 top-1/2 -translate-y-1/2 text-zinc-400 text-sm"></i>
+        <input
+          pInputText
+          type="text"
+          placeholder="Search pizza, burgers, drinks..."
+          class="w-full pl-10 pr-4 py-2.5 bg-white border border-zinc-200 rounded-lg text-sm text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-zinc-300 transition"
+          [ngModel]="searchQuery()"
+          (ngModelChange)="onSearchInput($event)"
+        />
+      </div>
+
+      <!-- Category Pills + Veg Toggle -->
+      <div class="flex items-center justify-between gap-4">
+        <!-- Category pills -->
+        <div class="flex items-center gap-2 overflow-x-auto pb-0.5 scrollbar-hide">
+          @for (cat of categories; track cat) {
+            <button
+              (click)="setCategory(cat)"
+              class="px-4 py-1.5 rounded-full text-sm font-medium whitespace-nowrap border transition-colors cursor-pointer"
+              [class]="selectedCategory() === cat
+                ? 'bg-zinc-900 text-white border-zinc-900'
+                : 'bg-white text-zinc-600 border-zinc-200 hover:border-zinc-400'"
+            >
+              {{ cat }}
+            </button>
+          }
+        </div>
+
+        <!-- Veg Only toggle -->
+        <div class="flex items-center gap-2.5 shrink-0">
+          <span class="text-xs font-medium text-zinc-500 uppercase tracking-wide">Veg Only</span>
+          <p-toggleSwitch
+            [ngModel]="isVegOnly()"
+            (ngModelChange)="onVegToggle($event)"
+          ></p-toggleSwitch>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════ CONTENT AREA ═══════════ -->
+  <div class="px-6 py-6">
+
+    <!-- ── SKELETON LOADING ── -->
+    @if (loading()) {
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        @for (i of [1,2,3,4,5,6,7,8]; track i) {
+          <div class="bg-white rounded-2xl border border-zinc-200 shadow-sm overflow-hidden">
+            <p-skeleton height="12rem" width="100%" borderRadius="0"></p-skeleton>
+            <div class="p-4 flex flex-col gap-2.5">
+              <div class="flex items-center justify-between">
+                <p-skeleton width="60%" height="1rem"></p-skeleton>
+                <p-skeleton width="3rem" height="1.25rem" borderRadius="2rem"></p-skeleton>
+              </div>
+              <p-skeleton width="85%" height="0.75rem"></p-skeleton>
+              <p-skeleton width="55%" height="0.75rem"></p-skeleton>
+              <div class="flex items-center justify-between mt-2">
+                <p-skeleton width="4rem" height="1.25rem"></p-skeleton>
+                <p-skeleton width="5rem" height="2rem" borderRadius="0.5rem"></p-skeleton>
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+
+    } @else {
+
+      <!-- ── EMPTY STATE ── -->
+      @if (filteredProducts().length === 0) {
+        <div class="flex flex-col items-center justify-center py-20 text-center">
+          <i class="pi pi-search text-4xl text-zinc-300 mb-3"></i>
+          <p class="text-sm font-medium text-zinc-500">No items match your filters</p>
+          <p class="text-xs text-zinc-400 mt-1">Try a different search or category</p>
+        </div>
+
+      } @else {
+
+        <!-- ── PRODUCT GRID ── -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          @for (product of filteredProducts(); track product.id) {
+            <div
+              class="group bg-white rounded-2xl border border-zinc-200 shadow-sm overflow-hidden transition-shadow hover:shadow-md"
+              [class.cursor-pointer]="product.stockQuantity > 0"
+              [class.cursor-default]="product.stockQuantity === 0"
+              (click)="openProductModal(product)"
+            >
+
+              <!-- Image -->
+              <div class="relative h-48 overflow-hidden bg-zinc-100">
+                <img
+                  [src]="product.imageUrl"
+                  [alt]="product.name"
+                  class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                  [class.opacity-50]="product.stockQuantity === 0"
+                  [class.grayscale]="product.stockQuantity === 0"
+                />
+                <!-- Veg / Non-veg badge -->
+                <span
+                  class="absolute top-3 left-3 flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider"
+                  [class]="product.isVeg
+                    ? 'bg-green-100 text-green-700'
+                    : 'bg-red-100 text-red-700'"
+                >
+                  <span
+                    class="w-2 h-2 rounded-full"
+                    [class]="product.isVeg ? 'bg-green-500' : 'bg-red-500'"
+                  ></span>
+                  {{ product.isVeg ? 'Veg' : 'Non-Veg' }}
+                </span>
+                <!-- Sold-out overlay -->
+                @if (product.stockQuantity === 0) {
+                  <div class="absolute inset-0 bg-zinc-900/40 flex items-center justify-center">
+                    <span class="bg-white text-zinc-900 text-xs font-bold uppercase px-3 py-1 rounded-full tracking-wide">
+                      Sold Out
+                    </span>
+                  </div>
+                }
+              </div>
+
+              <!-- Details -->
+              <div class="p-4">
+                <div class="flex items-start justify-between gap-2 mb-1.5">
+                  <h3 class="text-sm font-semibold text-zinc-900 leading-tight line-clamp-1">{{ product.name }}</h3>
+                  <span class="shrink-0 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-zinc-100 text-zinc-500">
+                    {{ product.category }}
+                  </span>
+                </div>
+                <p class="text-xs text-zinc-400 line-clamp-2 leading-relaxed mb-3">{{ product.description }}</p>
+                <div class="flex items-center justify-between">
+                  <span class="text-base font-bold text-zinc-900">₹{{ product.price }}</span>
+                  @if (product.stockQuantity === 0) {
+                    <button
+                      disabled
+                      class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-zinc-100 text-zinc-400 cursor-not-allowed"
+                    >
+                      Sold Out
+                    </button>
+                  } @else {
+                    <button
+                      class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-zinc-900 text-white hover:bg-zinc-800 transition-colors cursor-pointer"
+                      (click)="openProductModal(product); $event.stopPropagation()"
+                    >
+                      <i class="pi pi-plus text-[10px] mr-1"></i>Add
+                    </button>
+                  }
+                </div>
+              </div>
+            </div>
+          }
+        </div>
+      }
+    }
+  </div>
+
+  <!-- ═══════════ PRODUCT DETAIL MODAL ═══════════ -->
+  <p-dialog
+    [visible]="isModalOpen()"
+    (visibleChange)="closeModal()"
+    [modal]="true"
+    [draggable]="false"
+    [resizable]="false"
+    [closable]="false"
+    [showHeader]="false"
+    [style]="{ width: '480px' }"
+    [contentStyle]="{ padding: '0' }"
+    styleClass="product-detail-dialog"
+  >
+    @if (selectedProduct(); as p) {
+      <!-- Image with overlaid close button -->
+      <div class="relative h-56 bg-zinc-100">
+        <img
+          [src]="p.imageUrl"
+          [alt]="p.name"
+          class="w-full h-full object-cover"
+        />
+        <!-- Veg badge -->
+        <span
+          class="absolute top-3 left-3 flex items-center gap-1 px-2.5 py-1 rounded text-[11px] font-bold uppercase tracking-wider"
+          [class]="p.isVeg ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'"
+        >
+          <span class="w-2 h-2 rounded-full" [class]="p.isVeg ? 'bg-green-500' : 'bg-red-500'"></span>
+          {{ p.isVeg ? 'Veg' : 'Non-Veg' }}
+        </span>
+        <!-- Close button overlaid on image -->
+        <button
+          class="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center text-zinc-700 hover:bg-white shadow-sm transition-colors cursor-pointer"
+          (click)="closeModal()"
+        >
+          <i class="pi pi-times text-xs"></i>
+        </button>
+      </div>
+
+      <!-- Body -->
+      <div class="p-6">
+        <div class="flex items-start justify-between gap-3 mb-2">
+          <h2 class="text-lg font-bold text-zinc-900">{{ p.name }}</h2>
+          <span class="shrink-0 px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-zinc-100 text-zinc-500">
+            {{ p.category }}
+          </span>
+        </div>
+        <p class="text-sm text-zinc-500 leading-relaxed mb-4">{{ p.description }}</p>
+
+        <!-- Price + Stock info -->
+        <div class="flex items-center justify-between mb-6">
+          <span class="text-2xl font-bold text-zinc-900">₹{{ p.price }}</span>
+          <span class="text-xs text-zinc-400">
+            <i class="pi pi-box mr-1"></i>{{ p.stockQuantity }} in stock
+          </span>
+        </div>
+
+        <!-- Quantity Selector -->
+        <div class="flex items-center justify-center gap-4 mb-6">
+          <button
+            class="w-10 h-10 rounded-full flex items-center justify-center border border-zinc-300 text-zinc-700 hover:bg-zinc-100 transition disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
+            [disabled]="modalQuantity() <= 1"
+            (click)="decrementQty()"
+          >
+            <i class="pi pi-minus text-xs"></i>
+          </button>
+          <span class="text-xl font-bold text-zinc-900 min-w-[2.5rem] text-center">{{ modalQuantity() }}</span>
+          <button
+            class="w-10 h-10 rounded-full flex items-center justify-center border border-zinc-300 text-zinc-700 hover:bg-zinc-100 transition disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
+            [disabled]="modalQuantity() >= maxQuantity()"
+            (click)="incrementQty()"
+          >
+            <i class="pi pi-plus text-xs"></i>
+          </button>
+        </div>
+
+        <!-- Max qty warning -->
+        @if (maxQuantity() <= 3 && maxQuantity() > 0) {
+          <p class="text-center text-xs text-amber-600 mb-4">
+            <i class="pi pi-exclamation-triangle mr-1"></i>Only {{ maxQuantity() }} left — hurry!
+          </p>
+        }
+
+        <!-- Add to Cart button -->
+        <button
+          class="w-full py-3 rounded-xl bg-zinc-900 text-white font-semibold text-sm hover:bg-zinc-800 transition-colors flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+          [disabled]="maxQuantity() === 0"
+          (click)="addToCart()"
+        >
+          <i class="pi pi-shopping-cart text-sm"></i>
+          @if (maxQuantity() === 0) {
+            Already at max stock
+          } @else {
+            Add to Cart — ₹{{ modalTotal() | number }}
+          }
+        </button>
+      </div>
+    }
+  </p-dialog>
+
+</div>
