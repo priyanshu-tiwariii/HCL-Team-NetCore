@@ -29,7 +29,7 @@ export class AuthState {
       this.userProfile.set(this.storage.getUser());
 
       this.toast.success('Welcome back!');
-      this.router.navigate(['/leads']);
+      this.router.navigate(['/dashboard']);
     });
   }
 

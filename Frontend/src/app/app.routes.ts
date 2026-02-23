@@ -20,18 +20,22 @@ export const routes: Routes = [
     canActivate: [guestGuard],
   },
 
+  
+
   // 1. The App Shell (Layout Wrapper)
   {
     path: '',
     component: AppLayoutComponent,
-    canActivate: [authGuard],
+    // canActivate: [authGuard],
     children: [
-      {
-        path: 'leads',
-        loadChildren: () => import('./features/leads/leads.routes').then((m) => m.LEADS_ROUTES),
-      },
 
-      { path: '', redirectTo: 'leads', pathMatch: 'full' },
+      {
+      path: 'dashboard',
+      loadChildren: () => import('./features/dashboard').then(m => m.DASHBOARD_ROUTES)
+      },
+      
+
+      { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
     ],
   },
 

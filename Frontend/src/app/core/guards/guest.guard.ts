@@ -8,7 +8,7 @@ export const guestGuard: CanActivateFn = () => {
 
   // If the user already has a token, redirect them to the dashboard
   if (storage.getToken()) {
-    router.navigate(['/leads']);
+    router.navigate(['/dashboard']);
     return false;
   }
 
