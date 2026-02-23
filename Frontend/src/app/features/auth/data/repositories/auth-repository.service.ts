@@ -3,7 +3,8 @@ import { ApiService } from '../../../../core/service/api.service';
 import { LoginRequest } from '../models/login-request.model';
 import { AuthResponse } from '../models/login-resoponse.model';
 import { RegisterRequest } from '../models/register-request.model';
-import { AddressRequest, AddressResponse } from '../models/address-request.model';
+import { AddressRequest } from '../models/address-request.model';
+import { AddressResponse } from '../models/address-response.model';
 
 @Injectable({ providedIn: 'root' })
 export class AuthRepository {

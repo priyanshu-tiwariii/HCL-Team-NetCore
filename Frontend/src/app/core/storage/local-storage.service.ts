@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { DecodedToken } from '../../features/auth/data/models/login-resoponse.model';
+import { DecodedToken } from '../../features/auth/data/models/decoded-token';
 import { UserProfile } from '../../features/auth/data/models/user-profile.model';
 import { StorageKey } from '../../shared/entities/StorageKey';
 
@@ -7,9 +7,6 @@ import { StorageKey } from '../../shared/entities/StorageKey';
   providedIn: 'root',
 })
 export class LocalStorageService {
-  // ==========================================
-  // TOKEN
-  // ==========================================
 
   setToken(token: string): void {
     localStorage.setItem(StorageKey.TOKEN, token);
@@ -19,14 +16,7 @@ export class LocalStorageService {
     return localStorage.getItem(StorageKey.TOKEN);
   }
 
-  // ==========================================
-  // JWT DECODE (no external libraries)
-  // ==========================================
-
-  /**
-   * Splits the stored JWT by `.` and decodes the Base64-URL payload.
-   * Returns `null` if there is no token or decoding fails.
-   */
+  
   decodeToken(): DecodedToken | null {
     const token = this.getToken();
     if (!token) return null;
@@ -50,19 +40,13 @@ export class LocalStorageService {
     }
   }
 
-  /**
-   * Checks if the decoded token indicates the user is an Admin.
-   * The .NET backend stores `isAdmin` as "True" / "False" string.
-   */
+ 
   isAdmin(): boolean {
     const decoded = this.decodeToken();
     if (!decoded) return false;
     return decoded.isAdmin?.toLowerCase() === 'true';
   }
 
-  /**
-   * Build a UserProfile from the decoded JWT claims.
-   */
   getUserFromToken(): UserProfile | null {
     const decoded = this.decodeToken();
     if (!decoded) return null;
@@ -74,26 +58,19 @@ export class LocalStorageService {
     };
   }
 
-  /**
-   * Returns true if a token exists and is not expired.
-   */
   isTokenValid(): boolean {
     const decoded = this.decodeToken();
     if (!decoded || !decoded.exp) return false;
     return decoded.exp * 1000 > Date.now();
   }
 
-  // ==========================================
-  // CLEAR
-  // ==========================================
+
 
   clearAuth(): void {
     localStorage.removeItem(StorageKey.TOKEN);
   }
 
-  // ==========================================
-  // GENERIC CORE METHODS
-  // ==========================================
+ 
 
   setItem<T>(key: StorageKey, value: T): void {
     try {
