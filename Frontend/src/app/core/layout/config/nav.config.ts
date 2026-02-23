@@ -6,6 +6,12 @@ export interface CustomMenuItem extends MenuItem {
 
 export const NAV_CONFIG: CustomMenuItem[] = [
   {
+    label: 'Storefront',
+    icon: 'pi pi-home',
+    routerLink: '/home',
+    module: 'HOME',
+  },
+  {
     label: 'Dashboard',
     icon: 'pi pi-th-large',
     routerLink: '/dashboard',

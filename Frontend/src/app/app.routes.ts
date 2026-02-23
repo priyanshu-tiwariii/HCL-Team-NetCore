@@ -30,8 +30,12 @@ export const routes: Routes = [
     children: [
 
       {
-      path: 'dashboard',
-      loadChildren: () => import('./features/dashboard').then(m => m.DASHBOARD_ROUTES)
+        path: 'home',
+        loadChildren: () => import('./features/home').then(m => m.HOME_ROUTES)
+      },
+      {
+        path: 'dashboard',
+        loadChildren: () => import('./features/dashboard').then(m => m.DASHBOARD_ROUTES)
       },
       {
       path: 'orders',
