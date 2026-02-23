@@ -14,6 +14,11 @@ export const routes: Routes = [
     loadChildren: () => import('./features/auth/auth.routes').then((m) => m.AUTH_ROUTES),
     canActivate: [guestGuard],
   },
+  {
+    path: 'signup',
+    loadChildren: () => import('./features/auth/auth.routes').then((m) => m.SIGNUP_ROUTES),
+    canActivate: [guestGuard],
+  },
 
   // 1. The App Shell (Layout Wrapper)
   {
