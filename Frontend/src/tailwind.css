@@ -1,0 +1,7 @@
+@import 'tailwindcss';
+
+/* PrimeNG Tailwind integration */
+@import 'tailwindcss-primeui';
+
+/* PrimeIcons */
+@import 'primeicons/primeicons.css';

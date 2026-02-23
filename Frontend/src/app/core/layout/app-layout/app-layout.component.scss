@@ -1,0 +1,223 @@
+// ─── Sidebar nav slim scrollbar ─────────────────────────────────────────────
+.sidebar-nav {
+  &::-webkit-scrollbar {
+    width: 3px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #e4e4e7;
+    border-radius: 2px;
+  }
+}
+
+// ─── Page content slim scrollbar ────────────────────────────────────────────
+.page-content {
+  &::-webkit-scrollbar {
+    width: 5px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #d4d4d8;
+    border-radius: 3px;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: #a1a1aa;
+  }
+}
+
+// ─── PrimeNG Breadcrumb — strip default chrome ──────────────────────────────
+::ng-deep p-breadcrumb {
+  .p-breadcrumb {
+    background: transparent !important;
+    border: none !important;
+    padding: 0 !important;
+  }
+
+  .p-breadcrumb-item-link {
+    font-size: 13.5px;
+    color: #71717a;
+    font-weight: 400;
+    padding: 2px 4px;
+    border-radius: 4px;
+    transition: color 150ms ease;
+
+    &:hover {
+      color: #18181b;
+      background: transparent;
+    }
+  }
+
+  // Active / last crumb
+  .p-breadcrumb-item:last-child .p-breadcrumb-item-link {
+    color: #18181b;
+    font-weight: 500;
+  }
+
+  // Separator chevrons — keep them dim and non-interactive
+  .p-breadcrumb-separator {
+    color: #d4d4d8;
+    font-size: 11px;
+  }
+}
+
+// ─── PrimeNG Avatar — theme-aligned fill ─────────────────────────────────────
+::ng-deep p-avatar .p-avatar {
+  font-weight: 600;
+  font-size: 12px;
+}
+
+// ─── PrimeNG Ripple — tone down ripple color to zinc ────────────────────────
+::ng-deep .p-ink {
+  background: rgba(24, 24, 27, 0.08) !important;
+}
+
+// ─── PrimeNG Tooltip — match theme typography ───────────────────────────────
+::ng-deep .p-tooltip .p-tooltip-text {
+  font-size: 12.5px;
+  padding: 4px 8px;
+  border-radius: 5px;
+  background: #18181b;
+  color: #ffffff;
+}
+
+// ─── Profile Menu Popup (Noir/Vercel styling) ──────────────────────────────
+::ng-deep .profile-menu-popup.p-menu {
+  background: #ffffff;
+  border: 1px solid #e4e4e7;
+  border-radius: 12px;
+  box-shadow:
+    0 10px 25px -5px rgba(0, 0, 0, 0.08),
+    0 8px 10px -6px rgba(0, 0, 0, 0.08);
+  padding: 4px; // Tighter outer boundary
+  min-width: 220px; // Reduced from 250px for a more compact, mature look
+  margin-top: -12px;
+  margin-left: -15px;
+  transform-origin: bottom left;
+
+  ul {
+    outline: none;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+  }
+
+  .p-menuitem,
+  .p-menu-item {
+    margin: 2px 0; // Tighter vertical stacking between items
+
+    .p-menuitem-content,
+    .p-menu-item-content {
+      border-radius: 6px;
+      transition: all 0.15s ease;
+
+      .p-menuitem-link,
+      .p-menu-item-link {
+        // STRICT CONTROL OVER PADDING: 8px top/bottom, 12px left/right
+        padding: 8px 12px !important;
+        display: flex !important;
+        align-items: center;
+        text-decoration: none;
+        cursor: pointer;
+
+        .p-menuitem-icon,
+        .p-menu-item-icon {
+          margin-right: 10px !important; // Bring the icon closer to the text
+          color: #71717a !important;
+          font-size: 1rem !important; // Slightly smaller, sharper icon
+        }
+
+        .p-menuitem-text,
+        .p-menu-item-label {
+          font-size: 13px !important; // Compact, mature text size
+          font-weight: 500;
+          color: #27272a !important;
+          display: block !important;
+          visibility: visible !important;
+          opacity: 1 !important;
+        }
+      }
+
+      // ── HOVER STATE ──
+      &:hover,
+      &:focus-within {
+        background-color: #f4f4f5 !important; // zinc-100 hover
+
+        .p-menuitem-icon,
+        .p-menu-item-icon,
+        .p-menuitem-text,
+        .p-menu-item-label {
+          color: #18181b !important; // Text goes solid black on hover
+        }
+      }
+    }
+  }
+
+  // ── SEPARATOR LINES ──
+  .p-menuitem-separator,
+  .p-menu-separator {
+    border-top: 1px solid #e4e4e7;
+    margin: 4px 0 !important; // Tighter separators
+  }
+
+  // ── CUSTOM HEADER (User Info) ──
+  .pointer-events-none {
+    margin: 0;
+
+    .p-menuitem-content,
+    .p-menu-item-content {
+      background: transparent !important;
+
+      .p-menuitem-link,
+      .p-menu-item-link {
+        padding: 10px 12px 8px 12px !important; // Perfect alignment with other items
+        cursor: default;
+
+        .p-menu-item-label,
+        .p-menuitem-text {
+          width: 100%; // Ensure the injected flexbox stretches properly
+        }
+      }
+
+      &:hover {
+        background: transparent !important; // Prevents the grey hover box on the header
+      }
+    }
+  }
+
+  // ── LOGOUT ITEM (Red Theme) ──
+  .logout-item {
+    .p-menuitem-content,
+    .p-menu-item-content {
+      .p-menuitem-link,
+      .p-menu-item-link {
+        .p-menuitem-icon,
+        .p-menu-item-icon,
+        .p-menuitem-text,
+        .p-menu-item-label {
+          color: #ef4444 !important; // red-500
+        }
+      }
+
+      &:hover,
+      &:focus-within {
+        background-color: #fef2f2 !important; // red-50
+
+        .p-menuitem-icon,
+        .p-menu-item-icon,
+        .p-menuitem-text,
+        .p-menu-item-label {
+          color: #dc2626 !important; // red-600
+        }
+      }
+    }
+  }
+}

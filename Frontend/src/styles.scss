@@ -1,0 +1,173 @@
+/* =====================================
+   REMOVE ALL PRIMENG DEFAULT STYLE
+   ===================================== */
+
+.p-toast {
+  .p-toast-message {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+  }
+
+  .p-toast-message-content {
+    padding: 0 !important;
+    background: transparent !important;
+  }
+
+  button.p-toast-icon-close {
+    display: none !important;
+  }
+
+  .p-toast-message-icon {
+    display: none !important;
+  }
+}
+
+/* =====================================
+   CRM CUSTOM TOAST
+   ===================================== */
+
+.crm-toast {
+  width: 380px;
+
+  display: grid;
+
+  grid-template-columns: 18px 1fr 18px;
+
+  align-items: center;
+
+  gap: 12px;
+
+  background: #18181b;
+
+  border: 1px solid #27272a;
+
+  border-radius: 8px;
+
+  padding: 12px 16px;
+
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+}
+
+/* ICON */
+
+.crm-toast-icon {
+  font-size: 16px;
+
+  color: #fafafa;
+}
+
+/* TEXT */
+
+.crm-toast-text {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 2px;
+}
+
+.crm-toast-title {
+  font-size: 13px;
+
+  font-weight: 600;
+
+  color: #fafafa !important;
+}
+
+.crm-toast-desc {
+  font-size: 12px;
+
+  color: #a1a1aa;
+}
+
+/* CLOSE BUTTON */
+
+.crm-toast-close {
+  font-size: 14px;
+
+  color: #71717a;
+
+  cursor: pointer;
+
+  transition: color 0.15s;
+}
+
+.crm-toast-close:hover {
+  color: #fafafa;
+}
+
+/* =====================================
+   SMOOTH ANIMATION
+   ===================================== */
+
+.p-toast-message {
+  animation: crm-toast-slide 0.2s ease;
+}
+
+@keyframes crm-toast-slide {
+  from {
+    transform: translateY(-10px);
+
+    opacity: 0;
+  }
+
+  to {
+    transform: translateY(0);
+
+    opacity: 1;
+  }
+}
+
+.p-toast button,
+.p-toast .p-toast-icon-close {
+  display: none !important;
+}
+
+@custom-variant dark (&:is(.dark *));
+
+/* Map your Noir Zinc Theme surface colors to Tailwind for easy use in HTML if needed */
+@theme {
+  --color-primary-50: var(--p-primary-50);
+  --color-primary-500: var(--p-primary-500);
+  --color-primary-600: var(--p-primary-600);
+  --color-primary-900: var(--p-primary-900);
+
+  --color-surface-0: var(--p-surface-0); /* Pure White in light, Zinc 950 in dark */
+  --color-surface-50: var(--p-surface-50); /* Slightly off-white */
+  --color-surface-100: var(--p-surface-100);
+  --color-surface-800: var(--p-surface-800);
+  --color-surface-900: var(--p-surface-900);
+}
+
+@layer base {
+  body {
+    /* THIS IS THE MAGIC LINE! 
+       It applies the theme's default background to the whole app.
+       If you want it slightly gray, change it to var(--p-surface-50) 
+    */
+    background-color: var(--p-surface-0);
+
+    /* Applies the theme's default text color */
+    color: var(--p-text-color);
+
+    font-family: ui-sans-serif, system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+
+    /* Smooth transition when switching themes */
+    transition:
+      background-color 0.2s,
+      color 0.2s;
+
+    /* Ensures the body always fills the screen */
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+/* ==========================================================
+   PRIMENG TOAST OVERRIDES (Solid Fill, White Text Style)
+   ... (keep your existing Toast CSS here) ...
+   ========================================================== */
