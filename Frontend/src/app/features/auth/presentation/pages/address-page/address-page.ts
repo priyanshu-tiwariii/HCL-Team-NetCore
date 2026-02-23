@@ -20,17 +20,18 @@ export class AddressPage implements OnInit {
   private readonly toast = inject(ToastService);
   readonly state = inject(AuthState);
 
+  /** userId received from the signup page via navigation state */
   private userId!: number;
 
   addressForm = this.fb.group({
     addressDetail: ['', [Validators.required]],
     city: ['', [Validators.required]],
     state: ['', [Validators.required]],
-    country: ['India', [Validators.required]],
     pincode: ['', [Validators.required, Validators.pattern(/^\d{6}$/)]],
   });
 
   ngOnInit(): void {
+    // Ensure user came from the signup page
     const navState = history.state;
     if (!navState?.userId) {
       this.router.navigate(['/signup']);
@@ -48,7 +49,6 @@ export class AddressPage implements OnInit {
         addressDetail: formValue.addressDetail!,
         city: formValue.city!,
         state: formValue.state!,
-        country: formValue.country!,
         pincode: formValue.pincode!,
       };
 
@@ -57,7 +57,7 @@ export class AddressPage implements OnInit {
       if (success) {
         this.router.navigate(['/login']);
       } else {
-        this.toast.error(this.state.error() || 'Failed to save address. Please try again.');
+        this.router.navigate(['/login']);
       }
     } else {
       this.addressForm.markAllAsTouched();

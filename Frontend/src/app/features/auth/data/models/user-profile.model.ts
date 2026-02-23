@@ -1,9 +1,7 @@
+/** User profile derived from the decoded JWT token */
 export interface UserProfile {
-  employeeId: number;
-  employeeCode: string;
+  id: string;
   userName: string;
   email: string;
-  mobileNumber?: string;
-  companyName?: string;
   isAdmin: boolean;
 }

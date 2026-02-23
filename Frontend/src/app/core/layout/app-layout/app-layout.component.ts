@@ -1,4 +1,4 @@
-import { Component, inject, signal, effect } from '@angular/core';
+import { Component, inject, signal, computed, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs';
@@ -37,7 +37,16 @@ export class AppLayoutComponent {
   private readonly router = inject(Router);
   readonly authState = inject(AuthState);
 
-  readonly navItems = NAV_CONFIG;
+  /** Filter nav items by user role */
+  readonly navItems = computed<CustomMenuItem[]>(() => {
+    const admin = this.authState.isAdmin();
+    return NAV_CONFIG.filter((item) => {
+      if (item.separator) return true;
+      const role = item.role ?? 'all';
+      if (role === 'all') return true;
+      return admin ? role === 'admin' : role === 'customer';
+    });
+  });
   private readonly expandedGroups = signal<Set<string>>(new Set());
   private readonly activeUrl = signal<string>('');
 
@@ -103,7 +112,7 @@ export class AppLayoutComponent {
   }
 
   private autoOpenActiveGroup(url: string): void {
-    for (const item of this.navItems) {
+    for (const item of this.navItems()) {
       if (item.items?.some((child) => child.routerLink && url.startsWith(child.routerLink))) {
         this.expandedGroups.update((set) => new Set([...set, item.label!]));
       }

@@ -3,6 +3,14 @@ export interface AddressRequest {
   addressDetail: string;
   city: string;
   state: string;
-  country: string;
+  pincode: string;
+}
+
+export interface AddressResponse {
+  addressId: number;
+  userId: number;
+  addressDetail: string;
+  city: string;
+  state: string;
   pincode: string;
 }

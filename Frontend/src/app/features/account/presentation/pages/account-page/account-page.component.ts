@@ -7,12 +7,10 @@ import { DialogModule } from 'primeng/dialog';
 import { InputTextModule } from 'primeng/inputtext';
 import { SkeletonModule } from 'primeng/skeleton';
 import { DividerModule } from 'primeng/divider';
-import { AvatarModule } from 'primeng/avatar';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { ConfirmationService } from 'primeng/api';
 
-import { AuthState } from '../../../../auth/presentation/state/auth-state';
 import { AccountLogicService } from '../../../domain/services/account-logic.service';
-import { ToastService } from '../../../../../core/service/toast.service';
-import { UserAddress } from '../../../data/models/account-response.model';
 
 @Component({
   selector: 'app-account-page',
@@ -25,93 +23,127 @@ import { UserAddress } from '../../../data/models/account-response.model';
     InputTextModule,
     SkeletonModule,
     DividerModule,
-    AvatarModule,
+    ConfirmDialogModule,
   ],
+  providers: [ConfirmationService],
   templateUrl: './account-page.component.html',
   styleUrl: './account-page.component.css',
 })
 export class AccountPageComponent implements OnInit {
-  readonly authState = inject(AuthState);
-  private readonly profileService = inject(AccountLogicService);
-  private readonly toast = inject(ToastService);
+  readonly state = inject(AccountLogicService);
   private readonly fb = inject(FormBuilder);
+  private readonly confirmService = inject(ConfirmationService);
 
-  /** Address state (customer only) */
-  readonly isLoadingAddress = signal(true);
-  readonly currentAddress = signal<UserAddress | null>(null);
+  /** Modal visibility */
+  readonly isProfileModalOpen = signal(false);
+  readonly isAddressModalOpen = signal(false);
 
-  /** Modal state */
-  readonly isEditModalOpen = signal(false);
-  readonly isSaving = signal(false);
-
-  /** Address form */
+  /** Forms */
+  profileForm!: FormGroup;
   addressForm!: FormGroup;
 
-  /** User initials for avatar */
+  /** User initials for the avatar area */
   readonly initials = computed(() => {
-    const name = this.authState.userProfile()?.userName ?? '';
+    const name = this.state.userProfile()?.userName ?? '';
     return name
       .split(' ')
       .map((w) => w[0])
       .join('')
       .toUpperCase()
-      .slice(0, 2);
+      .slice(0, 2) || 'U';
   });
 
-  /** Display role label */
-  readonly isAdmin = computed(() => this.authState.userProfile()?.isAdmin ?? false);
-
   ngOnInit(): void {
-    this.initAddressForm();
-    if (!this.isAdmin()) {
-      this.loadAddress();
-    } else {
-      this.isLoadingAddress.set(false);
-    }
+    this.initForms();
+    this.state.loadAll();
   }
 
-  // ─── Address ──────────────────────────────────────────────
+  // ─── Form Init ────────────────────────────────────────────
 
-  private initAddressForm(): void {
+  private initForms(): void {
+    this.profileForm = this.fb.group({
+      userName: ['', Validators.required],
+      email: ['', [Validators.required, Validators.email]],
+      mobileNo: ['', [Validators.required, Validators.pattern(/^\d{10}$/)]],
+    });
+
     this.addressForm = this.fb.group({
-      street: ['', Validators.required],
+      addressDetail: ['', Validators.required],
       city: ['', Validators.required],
       state: ['', Validators.required],
-      country: ['', Validators.required],
       pincode: ['', [Validators.required, Validators.pattern(/^\d{6}$/)]],
     });
   }
 
-  private async loadAddress(): Promise<void> {
-    try {
-      const address = await this.profileService.getCustomerAddress();
-      this.currentAddress.set(address);
-    } catch {
-      this.toast.error('Could not load your address.');
-    } finally {
-      this.isLoadingAddress.set(false);
+  // ─── Profile Modal ────────────────────────────────────────
+
+  openProfileModal(): void {
+    const p = this.state.userProfile();
+    if (p) {
+      this.profileForm.patchValue({
+        userName: p.userName,
+        email: p.email,
+        mobileNo: p.mobileNo,
+      });
+    }
+    this.isProfileModalOpen.set(true);
+  }
+
+  onProfileModalHide(): void {
+    const p = this.state.userProfile();
+    if (p) {
+      this.profileForm.patchValue({
+        userName: p.userName,
+        email: p.email,
+        mobileNo: p.mobileNo,
+      });
+    } else {
+      this.profileForm.reset();
+    }
+    this.isProfileModalOpen.set(false);
+  }
+
+  async saveProfile(): Promise<void> {
+    if (this.profileForm.invalid) {
+      this.profileForm.markAllAsTouched();
+      return;
+    }
+    const success = await this.state.updateProfile(this.profileForm.value);
+    if (success) {
+      this.isProfileModalOpen.set(false);
     }
   }
 
-  openEditModal(): void {
-    const addr = this.currentAddress();
-    if (addr) {
-      this.addressForm.patchValue(addr);
+  // ─── Address Modal ────────────────────────────────────────
+
+  openAddressModal(): void {
+    const a = this.state.userAddress();
+    if (a) {
+      this.addressForm.patchValue({
+        addressDetail: a.addressDetail,
+        city: a.city,
+        state: a.state,
+        pincode: a.pincode,
+      });
     } else {
       this.addressForm.reset();
     }
-    this.isEditModalOpen.set(true);
+    this.isAddressModalOpen.set(true);
   }
 
-  onModalHide(): void {
-    // Reset form back to current address so no unsaved changes linger
-    const addr = this.currentAddress();
-    if (addr) {
-      this.addressForm.patchValue(addr);
+  onAddressModalHide(): void {
+    const a = this.state.userAddress();
+    if (a) {
+      this.addressForm.patchValue({
+        addressDetail: a.addressDetail,
+        city: a.city,
+        state: a.state,
+        pincode: a.pincode,
+      });
     } else {
       this.addressForm.reset();
     }
-    this.isEditModalOpen.set(false);
+    this.isAddressModalOpen.set(false);
   }
 
   async saveAddress(): Promise<void> {
@@ -119,18 +151,33 @@ export class AccountPageComponent implements OnInit {
       this.addressForm.markAllAsTouched();
       return;
     }
-    this.isSaving.set(true);
-    try {
-      const success = await this.profileService.updateCustomerAddress(this.addressForm.value);
-      if (success) {
-        this.currentAddress.set({ ...this.addressForm.value });
-        this.isEditModalOpen.set(false);
-        this.toast.success('Address updated successfully.');
-      }
-    } catch {
-      this.toast.error('Failed to save address.');
-    } finally {
-      this.isSaving.set(false);
+    const success = await this.state.updateAddress(this.addressForm.value);
+    if (success) {
+      this.isAddressModalOpen.set(false);
     }
+  }
+
+  // ─── Delete Actions ───────────────────────────────────────
+
+  confirmDeleteAddress(): void {
+    this.confirmService.confirm({
+      message: 'Are you sure you want to delete your delivery address?',
+      header: 'Delete Address',
+      icon: 'pi pi-trash',
+      acceptButtonStyleClass: 'p-button-danger',
+      rejectButtonStyleClass: 'p-button-secondary p-button-outlined',
+      accept: () => this.state.deleteAddress(),
+    });
+  }
+
+  confirmDeleteAccount(): void {
+    this.confirmService.confirm({
+      message: 'Are you sure? This action is irreversible. All your data will be permanently deleted.',
+      header: 'Delete Account',
+      icon: 'pi pi-exclamation-triangle',
+      acceptButtonStyleClass: 'p-button-danger',
+      rejectButtonStyleClass: 'p-button-secondary p-button-outlined',
+      accept: () => this.state.deleteAccount(),
+    });
   }
 }

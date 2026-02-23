@@ -52,7 +52,7 @@
       [class.px-2]="layout.isSidebarCollapsed()"
       [class.items-center]="layout.isSidebarCollapsed()"
     >
-      @for (item of navItems; track $index) {
+      @for (item of navItems(); track $index) {
         @if (item.separator) {
           <div class="h-px bg-zinc-100 my-1.5 mx-0.5"></div>
         } @else if (item.items) {

@@ -49,7 +49,7 @@ export class SignupPage {
       const userId = await this.state.registerUser(registerData);
 
       if (userId) {
-        this.router.navigate(['/signup/address'], { state: { userId } });
+        this.router.navigate(['/login'], { state: { userId } });
       } else {
         this.toast.error(this.state.error() || 'Registration failed. Please try again.');
       }

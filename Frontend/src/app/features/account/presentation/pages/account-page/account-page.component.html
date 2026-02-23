@@ -1,209 +1,244 @@
-<div class="bg-zinc-50 min-h-screen py-8 px-4">
-  <div class="max-w-3xl mx-auto flex flex-col gap-6">
+<!-- Confirm dialog (PrimeNG) -->
+<p-confirmDialog />
 
-    <!-- ════════════════════════════════════════════════════
-         HEADER CARD — Avatar + Greeting
-         ════════════════════════════════════════════════════ -->
+<div class="max-w-4xl mx-auto p-6 flex flex-col gap-6">
+
+  <!-- ════════════════════════════════════════════════════════
+       LOADING SKELETON
+       ════════════════════════════════════════════════════════ -->
+  @if (state.isLoading()) {
     <div class="bg-white! rounded-2xl border border-zinc-200 shadow-sm p-6 flex items-center gap-5">
-      <p-avatar [label]="initials()"
-                size="xlarge"
-                shape="circle"
-                [style]="{ 'background-color': '#18181b', color: '#fff', 'font-size': '1.25rem', 'font-weight': '700' }">
-      </p-avatar>
+      <p-skeleton shape="circle" size="4rem" />
+      <div class="flex-1 space-y-2">
+        <p-skeleton width="40%" height="1.5rem" />
+        <p-skeleton width="60%" height="1rem" />
+      </div>
+    </div>
+    <div class="bg-white! rounded-2xl border border-zinc-200 shadow-sm p-6 space-y-4">
+      <p-skeleton width="30%" height="1rem" />
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+        <p-skeleton width="100%" height="1rem" />
+        <p-skeleton width="100%" height="1rem" />
+        <p-skeleton width="100%" height="1rem" />
+        <p-skeleton width="100%" height="1rem" />
+      </div>
+    </div>
+  }
+
+  <!-- ════════════════════════════════════════════════════════
+       LOADED STATE
+       ════════════════════════════════════════════════════════ -->
+  @if (!state.isLoading()) {
+
+    <!-- ─── Header Card ─────────────────────────────────── -->
+    <div class="bg-white! rounded-2xl border border-zinc-200 shadow-sm p-6 flex items-center gap-5">
+      <div class="flex items-center justify-center w-16 h-16 rounded-full bg-zinc-900 text-white text-xl font-bold flex-shrink-0">
+        {{ initials() }}
+      </div>
       <div>
         <h1 class="text-2xl font-bold text-zinc-900">
-          {{ isAdmin() ? 'Admin Profile' : 'My Account' }}
+          {{ state.userProfile()?.userName || 'My Account' }}
         </h1>
         <p class="text-sm text-zinc-500 mt-0.5">
-          {{ isAdmin() ? 'System administrator overview' : 'Manage your personal info and delivery address' }}
+          {{ state.userProfile()?.isAdmin ? 'System Administrator' : 'Manage your personal info and delivery address' }}
         </p>
       </div>
     </div>
 
-    <!-- ════════════════════════════════════════════════════
-         ADMIN VIEW
-         ════════════════════════════════════════════════════ -->
-    @if (isAdmin()) {
-      <div class="bg-white! rounded-2xl border border-zinc-200 shadow-sm p-6">
-        <div class="flex items-center gap-2 mb-6">
-          <i class="pi pi-id-card text-zinc-600"></i>
-          <h2 class="text-lg font-semibold text-zinc-900">Account Information</h2>
-        </div>
-
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-          <!-- Name -->
-          <div>
-            <p class="text-xs text-zinc-500 uppercase tracking-wider mb-1">Name</p>
-            <p class="text-sm font-medium text-zinc-900">{{ authState.userProfile()?.userName }}</p>
-          </div>
-
-          <!-- Email -->
-          <div>
-            <p class="text-xs text-zinc-500 uppercase tracking-wider mb-1">Email</p>
-            <p class="text-sm font-medium text-zinc-900">{{ authState.userProfile()?.email }}</p>
-          </div>
-
-          <!-- Role -->
-          <div>
-            <p class="text-xs text-zinc-500 uppercase tracking-wider mb-1">Role</p>
-            <p class="text-sm font-medium text-zinc-900">System Administrator</p>
-          </div>
-
-          <!-- Company -->
-          <div>
-            <p class="text-xs text-zinc-500 uppercase tracking-wider mb-1">Company</p>
-            <p class="text-sm font-medium text-zinc-900">
-              {{ authState.userProfile()?.companyName || 'Food Delivery Enterprise' }}
-            </p>
-          </div>
-        </div>
-      </div>
-    }
-
-    <!-- ════════════════════════════════════════════════════
-         CUSTOMER VIEW
-         ════════════════════════════════════════════════════ -->
-    @if (!isAdmin()) {
-      <!-- Personal Info Card -->
-      <div class="bg-white! rounded-2xl border border-zinc-200 shadow-sm p-6">
-        <div class="flex items-center gap-2 mb-6">
+    <!-- ─── Section 1: Personal Information ──────────────── -->
+    <div class="bg-white! rounded-2xl border border-zinc-200 shadow-sm p-6">
+      <div class="flex items-center justify-between mb-6">
+        <div class="flex items-center gap-2">
           <i class="pi pi-user text-zinc-600"></i>
           <h2 class="text-lg font-semibold text-zinc-900">Personal Information</h2>
         </div>
-
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-          <!-- Name -->
-          <div>
-            <p class="text-xs text-zinc-500 uppercase tracking-wider mb-1">Name</p>
-            <p class="text-sm font-medium text-zinc-900">{{ authState.userProfile()?.userName }}</p>
-          </div>
-
-          <!-- Email -->
-          <div>
-            <p class="text-xs text-zinc-500 uppercase tracking-wider mb-1">Email</p>
-            <p class="text-sm font-medium text-zinc-900">{{ authState.userProfile()?.email }}</p>
-          </div>
-
-          <!-- Mobile Number -->
-          <div>
-            <p class="text-xs text-zinc-500 uppercase tracking-wider mb-1">Mobile Number</p>
-            <p class="text-sm font-medium text-zinc-900">
-              {{ authState.userProfile()?.mobileNumber || 'Not provided' }}
-            </p>
-          </div>
-        </div>
+        <button pButton
+                label="Edit Profile"
+                icon="pi pi-pencil"
+                severity="secondary"
+                [outlined]="true"
+                [rounded]="true"
+                class="!text-sm"
+                (click)="openProfileModal()">
+        </button>
       </div>
 
-      <!-- Delivery Address Card -->
-      <div class="bg-white! rounded-2xl border border-zinc-200 shadow-sm p-6">
-        <div class="flex items-center justify-between mb-6">
-          <div class="flex items-center gap-2">
-            <i class="pi pi-map-marker text-zinc-600"></i>
-            <h2 class="text-lg font-semibold text-zinc-900">Default Delivery Address</h2>
-          </div>
-          <button pButton
-                  label="Edit"
-                  icon="pi pi-pencil"
-                  severity="secondary"
-                  [outlined]="true"
-                  [rounded]="true"
-                  class="!text-sm"
-                  (click)="openEditModal()">
-          </button>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+        <div>
+          <p class="text-xs text-zinc-500 uppercase tracking-wider mb-1">Name</p>
+          <p class="text-sm font-medium text-zinc-900">{{ state.userProfile()?.userName || '—' }}</p>
         </div>
+        <div>
+          <p class="text-xs text-zinc-500 uppercase tracking-wider mb-1">Email</p>
+          <p class="text-sm font-medium text-zinc-900">{{ state.userProfile()?.email || '—' }}</p>
+        </div>
+        <div>
+          <p class="text-xs text-zinc-500 uppercase tracking-wider mb-1">Mobile Number</p>
+          <p class="text-sm font-medium text-zinc-900">{{ state.userProfile()?.mobileNo || '—' }}</p>
+        </div>
+        <div>
+          <p class="text-xs text-zinc-500 uppercase tracking-wider mb-1">Role</p>
+          <p class="text-sm font-medium text-zinc-900">
+            {{ state.userProfile()?.isAdmin ? 'Administrator' : 'Customer' }}
+          </p>
+        </div>
+        <div>
+          <p class="text-xs text-zinc-500 uppercase tracking-wider mb-1">Member Since</p>
+          <p class="text-sm font-medium text-zinc-900">
+            {{ state.userProfile()?.createdAt ? (state.userProfile()!.createdAt | date:'mediumDate') : '—' }}
+          </p>
+        </div>
+      </div>
+    </div>
 
-        @if (isLoadingAddress()) {
-          <div class="space-y-3">
-            <p-skeleton width="70%" height="1rem" />
-            <p-skeleton width="50%" height="1rem" />
-            <p-skeleton width="60%" height="1rem" />
-            <p-skeleton width="30%" height="1rem" />
-          </div>
-        } @else if (currentAddress()) {
-          <div class="text-sm text-zinc-700 space-y-1">
-            <p class="font-medium text-zinc-900">{{ currentAddress()!.street }}</p>
-            <p>{{ currentAddress()!.city }}, {{ currentAddress()!.state }}</p>
-            <p>{{ currentAddress()!.country }} — {{ currentAddress()!.pincode }}</p>
-          </div>
-        } @else {
-          <div class="text-center py-8">
-            <i class="pi pi-map-marker text-3xl text-zinc-300 mb-3"></i>
-            <p class="text-sm text-zinc-500 mb-4">No address saved yet.</p>
+    <!-- ─── Section 2: Delivery Address ──────────────────── -->
+    <div class="bg-white! rounded-2xl border border-zinc-200 shadow-sm p-6">
+      <div class="flex items-center justify-between mb-6">
+        <div class="flex items-center gap-2">
+          <i class="pi pi-map-marker text-zinc-600"></i>
+          <h2 class="text-lg font-semibold text-zinc-900">Delivery Address</h2>
+        </div>
+        @if (state.userAddress()) {
+          <div class="flex items-center gap-2">
             <button pButton
-                    label="Add Address"
-                    icon="pi pi-plus"
+                    label="Edit"
+                    icon="pi pi-pencil"
                     severity="secondary"
                     [outlined]="true"
-                    (click)="openEditModal()">
+                    [rounded]="true"
+                    class="!text-sm"
+                    (click)="openAddressModal()">
+            </button>
+            <button pButton
+                    icon="pi pi-trash"
+                    severity="danger"
+                    [outlined]="true"
+                    [rounded]="true"
+                    class="!text-sm"
+                    (click)="confirmDeleteAddress()">
             </button>
           </div>
         }
       </div>
-    }
 
-    <!-- ════════════════════════════════════════════════════
-         ACCOUNT ACTIONS (both roles)
-         ════════════════════════════════════════════════════ -->
-    <div class="bg-white! rounded-2xl border border-zinc-200 shadow-sm p-6">
-      <div class="flex items-center gap-2 mb-4">
-        <i class="pi pi-shield text-zinc-600"></i>
-        <h2 class="text-lg font-semibold text-zinc-900">Security</h2>
-      </div>
-      <div class="flex items-center justify-between">
-        <div>
-          <p class="text-sm font-medium text-zinc-900">Password</p>
-          <p class="text-xs text-zinc-500">Last changed 30 days ago</p>
+      @if (state.userAddress()) {
+        <div class="text-sm text-zinc-700 space-y-1">
+          <p class="font-medium text-zinc-900">{{ state.userAddress()!.addressDetail }}</p>
+          <p>{{ state.userAddress()!.city }}, {{ state.userAddress()!.state }}</p>
+          <p>{{ state.userAddress()!.pincode }}</p>
         </div>
-        <button pButton
-                label="Change Password"
-                icon="pi pi-lock"
-                severity="secondary"
-                [outlined]="true"
-                [rounded]="true"
-                class="!text-sm">
-        </button>
-      </div>
+      } @else {
+        <div class="text-center py-8">
+          <i class="pi pi-map-marker text-3xl text-zinc-300 mb-3"></i>
+          <p class="text-sm text-zinc-500 mb-4">No delivery address saved yet.</p>
+          <button pButton
+                  label="Add Address"
+                  icon="pi pi-plus"
+                  severity="secondary"
+                  [outlined]="true"
+                  (click)="openAddressModal()">
+          </button>
+        </div>
+      }
     </div>
-  </div>
+
+    <!-- ─── Section 3: Danger Zone ───────────────────────── -->
+    <div class="rounded-2xl border border-red-200 bg-red-50/30 shadow-sm p-6">
+      <div class="flex items-center gap-2 mb-4">
+        <i class="pi pi-exclamation-triangle text-red-500"></i>
+        <h2 class="text-lg font-semibold text-red-700">Danger Zone</h2>
+      </div>
+      <p class="text-sm text-zinc-600 mb-4">
+        Once you delete your account, all of your data will be permanently removed. This action cannot be undone.
+      </p>
+      <button pButton
+              label="Delete Account"
+              icon="pi pi-trash"
+              severity="danger"
+              [rounded]="true"
+              class="!text-sm"
+              (click)="confirmDeleteAccount()">
+      </button>
+    </div>
+  }
 </div>
 
 <!-- ════════════════════════════════════════════════════════
-     EDIT ADDRESS MODAL
+     EDIT PROFILE MODAL
      ════════════════════════════════════════════════════════ -->
-<p-dialog [visible]="isEditModalOpen()"
-          (visibleChange)="onModalHide()"
+<p-dialog [visible]="isProfileModalOpen()"
+          (visibleChange)="onProfileModalHide()"
           [modal]="true"
           [closable]="false"
           [draggable]="false"
           [style]="{ width: '480px' }"
           [breakpoints]="{ '576px': '95vw' }">
 
-  <!-- Custom header -->
+  <ng-template #header>
+    <div class="flex items-center justify-between w-full">
+      <div class="flex items-center gap-3">
+        <div class="flex items-center justify-center w-9 h-9 rounded-lg bg-zinc-100">
+          <i class="pi pi-user text-zinc-700"></i>
+        </div>
+        <h3 class="text-lg font-bold text-zinc-900">Edit Profile</h3>
+      </div>
+      <button pButton [text]="true" [rounded]="true" icon="pi pi-times" (click)="onProfileModalHide()"></button>
+    </div>
+  </ng-template>
+
+  <form [formGroup]="profileForm" (ngSubmit)="saveProfile()" class="space-y-4 pt-2">
+    <div>
+      <label class="block text-sm font-medium text-zinc-700 mb-1">Full Name</label>
+      <input pInputText formControlName="userName" placeholder="Your name" class="w-full" />
+    </div>
+    <div>
+      <label class="block text-sm font-medium text-zinc-700 mb-1">Email</label>
+      <input pInputText formControlName="email" placeholder="name@company.com" class="w-full" />
+    </div>
+    <div>
+      <label class="block text-sm font-medium text-zinc-700 mb-1">Mobile Number</label>
+      <input pInputText formControlName="mobileNo" placeholder="10-digit number" class="w-full" />
+    </div>
+
+    <p-divider />
+    <div class="flex justify-end gap-3">
+      <button pButton type="button" label="Cancel" severity="secondary" [outlined]="true" [rounded]="true" (click)="onProfileModalHide()"></button>
+      <button pButton type="submit" label="Save Changes" icon="pi pi-check" [rounded]="true" [loading]="state.isSaving()"></button>
+    </div>
+  </form>
+</p-dialog>
+
+<!-- ════════════════════════════════════════════════════════
+     EDIT ADDRESS MODAL
+     ════════════════════════════════════════════════════════ -->
+<p-dialog [visible]="isAddressModalOpen()"
+          (visibleChange)="onAddressModalHide()"
+          [modal]="true"
+          [closable]="false"
+          [draggable]="false"
+          [style]="{ width: '480px' }"
+          [breakpoints]="{ '576px': '95vw' }">
+
   <ng-template #header>
     <div class="flex items-center justify-between w-full">
       <div class="flex items-center gap-3">
         <div class="flex items-center justify-center w-9 h-9 rounded-lg bg-zinc-100">
           <i class="pi pi-map-marker text-zinc-700"></i>
         </div>
-        <h3 class="text-lg font-bold text-zinc-900">Edit Delivery Address</h3>
+        <h3 class="text-lg font-bold text-zinc-900">
+          {{ state.userAddress() ? 'Edit Address' : 'Add Address' }}
+        </h3>
       </div>
-      <button pButton
-              [text]="true"
-              [rounded]="true"
-              icon="pi pi-times"
-              (click)="onModalHide()">
-      </button>
+      <button pButton [text]="true" [rounded]="true" icon="pi pi-times" (click)="onAddressModalHide()"></button>
     </div>
   </ng-template>
 
   <form [formGroup]="addressForm" (ngSubmit)="saveAddress()" class="space-y-4 pt-2">
-    <!-- Street -->
     <div>
-      <label class="block text-sm font-medium text-zinc-700 mb-1">Street Address</label>
-      <input pInputText formControlName="street" placeholder="House, Street, Area" class="w-full" />
+      <label class="block text-sm font-medium text-zinc-700 mb-1">Address</label>
+      <input pInputText formControlName="addressDetail" placeholder="House, Street, Area" class="w-full" />
     </div>
 
-    <!-- City & State -->
     <div class="grid grid-cols-2 gap-4">
       <div>
         <label class="block text-sm font-medium text-zinc-700 mb-1">City</label>
@@ -215,36 +250,15 @@
       </div>
     </div>
 
-    <!-- Country & Pincode -->
-    <div class="grid grid-cols-2 gap-4">
-      <div>
-        <label class="block text-sm font-medium text-zinc-700 mb-1">Country</label>
-        <input pInputText formControlName="country" placeholder="Country" class="w-full" />
-      </div>
-      <div>
-        <label class="block text-sm font-medium text-zinc-700 mb-1">Pincode</label>
-        <input pInputText formControlName="pincode" placeholder="6-digit code" class="w-full" />
-      </div>
+    <div>
+      <label class="block text-sm font-medium text-zinc-700 mb-1">Pincode</label>
+      <input pInputText formControlName="pincode" placeholder="6-digit code" class="w-full" />
     </div>
 
-    <!-- Actions -->
     <p-divider />
     <div class="flex justify-end gap-3">
-      <button pButton
-              type="button"
-              label="Cancel"
-              severity="secondary"
-              [outlined]="true"
-              [rounded]="true"
-              (click)="onModalHide()">
-      </button>
-      <button pButton
-              type="submit"
-              label="Save Address"
-              icon="pi pi-check"
-              [rounded]="true"
-              [loading]="isSaving()">
-      </button>
+      <button pButton type="button" label="Cancel" severity="secondary" [outlined]="true" [rounded]="true" (click)="onAddressModalHide()"></button>
+      <button pButton type="submit" label="Save Address" icon="pi pi-check" [rounded]="true" [loading]="state.isSaving()"></button>
     </div>
   </form>
 </p-dialog>

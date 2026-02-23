@@ -4,11 +4,13 @@ import { ErrorComponent } from './core/pages/error/error.component';
 import { NotFoundComponent } from './core/pages/not-found/not-found.component';
 import { AppLayoutComponent } from './core/layout/app-layout/app-layout.component';
 
-// Note: AuthPage is intentionally REMOVED from imports here because it is lazy-loaded!
 import { guestGuard } from './core/guards/guest.guard';
 import { authGuard } from './core/guards/auth.guard';
+import { adminGuard } from './core/guards/admin.guard';
+import { roleRedirectGuard } from './core/guards/role-redirect.guard';
 
 export const routes: Routes = [
+  // ── Public (guest-only) ──────────────────────────────────
   {
     path: 'login',
     loadChildren: () => import('./features/auth/auth.routes').then((m) => m.AUTH_ROUTES),
@@ -20,49 +22,52 @@ export const routes: Routes = [
     canActivate: [guestGuard],
   },
 
-  
-
-  // 1. The App Shell (Layout Wrapper)
+  // ── App Shell (authenticated) ────────────────────────────
   {
     path: '',
     component: AppLayoutComponent,
-    // canActivate: [authGuard],
+    canActivate: [authGuard],
     children: [
-
+      // Customer routes (authGuard only — inherited from parent)
       {
         path: 'home',
-        loadChildren: () => import('./features/home').then(m => m.HOME_ROUTES)
-      },
-      {
-        path: 'dashboard',
-        loadChildren: () => import('./features/dashboard').then(m => m.DASHBOARD_ROUTES)
-      },
-      {
-      path: 'orders',
-        loadChildren: () => import('./features/orders/orders.routes').then(m => m.ORDERS_ROUTES)
-      },
-      {
-        path: 'products',
-        loadChildren: () => import('./features/product').then(m => m.PRODUCT_ROUTES)
-      },
-      {
-        path: 'my-orders',
-        loadChildren: () => import('./features/my-orders').then(m => m.MY_ORDERS_ROUTES)
+        loadChildren: () => import('./features/home').then(m => m.HOME_ROUTES),
       },
       {
         path: 'cart',
-        loadChildren: () => import('./features/cart').then(m => m.CART_ROUTES)
+        loadChildren: () => import('./features/cart').then(m => m.CART_ROUTES),
+      },
+      {
+        path: 'my-orders',
+        loadChildren: () => import('./features/my-orders').then(m => m.MY_ORDERS_ROUTES),
       },
       {
         path: 'settings',
-        loadChildren: () => import('./features/account').then(m => m.ACCOUNT_ROUTES)
+        loadChildren: () => import('./features/account').then(m => m.ACCOUNT_ROUTES),
       },
 
-      { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+      // Admin routes (authGuard inherited + adminGuard)
+      {
+        path: 'dashboard',
+        loadChildren: () => import('./features/dashboard').then(m => m.DASHBOARD_ROUTES),
+        canActivate: [adminGuard],
+      },
+      {
+        path: 'orders',
+        loadChildren: () => import('./features/orders/orders.routes').then(m => m.ORDERS_ROUTES),
+        canActivate: [adminGuard],
+      },
+      {
+        path: 'products',
+        loadChildren: () => import('./features/product').then(m => m.PRODUCT_ROUTES),
+        canActivate: [adminGuard],
+      },
+
+      { path: '', canActivate: [roleRedirectGuard], children: [] },
     ],
   },
 
-  // 2. The Global Pages
+  // ── Global error pages ───────────────────────────────────
   { path: 'access-denied', component: AccessDeniedComponent },
   { path: 'error', component: ErrorComponent },
   { path: 'not-found', component: NotFoundComponent },
