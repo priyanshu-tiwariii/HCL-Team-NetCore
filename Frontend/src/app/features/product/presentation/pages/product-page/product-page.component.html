@@ -1,5 +1,420 @@
-<div class="p-6">
-  <h1 class="text-xl font-semibold">
-    Product Works
-  </h1>
+<div class="p-6 bg-zinc-50 min-h-full">
+
+  <!-- ── Page Header ── -->
+  <div class="flex items-start justify-between mb-6">
+    <div>
+      <h1 class="text-2xl font-semibold text-zinc-900 tracking-tight">Menu Management</h1>
+      <p class="text-sm text-zinc-500 mt-1">Add, edit, and manage your food menu items</p>
+    </div>
+    <p-button
+      label="Add New Product"
+      icon="pi pi-plus"
+      [disabled]="loading()"
+      (onClick)="openAddModal()"
+      styleClass="bg-zinc-900! border-zinc-900! text-white! text-sm! font-medium! rounded-lg! px-4!"
+    ></p-button>
+  </div>
+
+  <!-- ── Summary Cards ── -->
+  <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+    @if (loading()) {
+      @for (i of [1,2,3]; track i) {
+        <div class="bg-white border border-zinc-200 rounded-xl p-5 shadow-sm">
+          <p-skeleton width="60%" height="0.75rem" styleClass="mb-3"></p-skeleton>
+          <p-skeleton width="40%" height="1.75rem"></p-skeleton>
+        </div>
+      }
+    } @else {
+      <div class="bg-white border border-zinc-200 rounded-xl p-5 shadow-sm flex items-center gap-4">
+        <div class="w-10 h-10 rounded-lg bg-zinc-100 flex items-center justify-center shrink-0">
+          <i class="pi pi-box text-zinc-600"></i>
+        </div>
+        <div>
+          <p class="text-xs font-medium text-zinc-400 uppercase tracking-wide">Total Products</p>
+          <p class="text-2xl font-bold text-zinc-900 mt-0.5">{{ totalProducts() }}</p>
+        </div>
+      </div>
+      <div class="bg-white border border-zinc-200 rounded-xl p-5 shadow-sm flex items-center gap-4">
+        <div class="w-10 h-10 rounded-lg bg-green-50 flex items-center justify-center shrink-0">
+          <i class="pi pi-check-circle text-green-600"></i>
+        </div>
+        <div>
+          <p class="text-xs font-medium text-zinc-400 uppercase tracking-wide">Active Items</p>
+          <p class="text-2xl font-bold text-zinc-900 mt-0.5">{{ activeProducts() }}</p>
+        </div>
+      </div>
+      <div class="bg-white border border-zinc-200 rounded-xl p-5 shadow-sm flex items-center gap-4">
+        <div class="w-10 h-10 rounded-lg bg-red-50 flex items-center justify-center shrink-0">
+          <i class="pi pi-exclamation-triangle text-red-500"></i>
+        </div>
+        <div>
+          <p class="text-xs font-medium text-zinc-400 uppercase tracking-wide">Out of Stock</p>
+          <p class="text-2xl font-bold text-zinc-900 mt-0.5">{{ outOfStockProducts() }}</p>
+        </div>
+      </div>
+    }
+  </div>
+
+  <!-- ── Table Card ── -->
+  <div class="bg-white border border-zinc-200 rounded-xl shadow-sm overflow-hidden">
+
+    <!-- Card Header -->
+    <div class="flex items-center justify-between px-6 py-4 border-b border-zinc-100">
+      @if (loading()) {
+        <p-skeleton width="8rem" height="1rem"></p-skeleton>
+      } @else {
+        <div class="flex items-center gap-2">
+          <i class="pi pi-list text-zinc-400 text-sm"></i>
+          <h2 class="text-sm font-semibold text-zinc-800">All Products</h2>
+          <span class="text-xs text-zinc-400">({{ totalProducts() }})</span>
+        </div>
+      }
+    </div>
+
+    <!-- ── Skeleton ── -->
+    @if (loading()) {
+      <div class="grid grid-cols-6 gap-4 px-5 py-3 bg-zinc-50 border-b border-zinc-200">
+        @for (w of ['8rem','6rem','5rem','5rem','6rem','5rem']; track w) {
+          <p-skeleton [width]="w" height="0.75rem"></p-skeleton>
+        }
+      </div>
+      @for (row of [1,2,3,4,5,6,7]; track row) {
+        <div class="grid grid-cols-6 gap-4 px-5 py-4 border-b border-zinc-100 items-center last:border-b-0">
+          <div class="flex items-center gap-3">
+            <p-skeleton shape="circle" size="2.25rem"></p-skeleton>
+            <p-skeleton width="6rem" height="0.875rem"></p-skeleton>
+          </div>
+          <p-skeleton width="5rem" height="1.5rem" borderRadius="1rem"></p-skeleton>
+          <p-skeleton width="4rem" height="0.875rem"></p-skeleton>
+          <p-skeleton width="3rem" height="0.875rem"></p-skeleton>
+          <p-skeleton width="5.5rem" height="1.5rem" borderRadius="2rem"></p-skeleton>
+          <div class="flex items-center gap-2">
+            <p-skeleton width="2.25rem" height="2.25rem" borderRadius="0.5rem"></p-skeleton>
+            <p-skeleton width="2.75rem" height="1.25rem" borderRadius="2rem"></p-skeleton>
+          </div>
+        </div>
+      }
+
+    } @else {
+      <!-- ── Real Table ── -->
+      <p-table
+        [value]="products()"
+        [rows]="10"
+        [paginator]="products().length > 10"
+        [rowsPerPageOptions]="[10, 20, 50]"
+        [tableStyle]="{ 'min-width': '60rem' }"
+        styleClass="p-datatable-sm"
+      >
+        <ng-template #header>
+          <tr>
+            <th scope="col" style="width:28%">Product</th>
+            <th scope="col" style="width:13%">Category</th>
+            <th scope="col" style="width:10%">Price</th>
+            <th scope="col" style="width:10%">Stock</th>
+            <th scope="col" style="width:14%">Status</th>
+            <th scope="col" style="width:25%">Actions</th>
+          </tr>
+        </ng-template>
+
+        <ng-template #body let-product>
+          <tr [class.opacity-50]="!product.isActive">
+
+            <!-- Product Name + Veg Indicator -->
+            <td>
+              <div class="flex items-center gap-3">
+                <div class="w-9 h-9 rounded-lg bg-zinc-100 overflow-hidden shrink-0 flex items-center justify-center">
+                  @if (product.imageUrl) {
+                    <img [src]="product.imageUrl" [alt]="product.name" class="w-full h-full object-cover" />
+                  } @else {
+                    <i class="pi pi-image text-zinc-400 text-xs"></i>
+                  }
+                </div>
+                <div>
+                  <div class="flex items-center gap-1.5">
+                    <span
+                      class="inline-flex items-center justify-center w-3.5 h-3.5 rounded-sm border-2 shrink-0"
+                      [class]="product.isVeg ? 'border-green-600' : 'border-red-600'"
+                    >
+                      <span
+                        class="w-1.5 h-1.5 rounded-full"
+                        [class]="product.isVeg ? 'bg-green-600' : 'bg-red-600'"
+                      ></span>
+                    </span>
+                    <span class="text-sm font-medium text-zinc-900">{{ product.name }}</span>
+                  </div>
+                  <p class="text-xs text-zinc-400 mt-0.5 truncate max-w-[180px]">{{ product.description }}</p>
+                </div>
+              </div>
+            </td>
+
+            <!-- Category Badge -->
+            <td>
+              <span
+                class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
+                [ngClass]="getCategoryColor(product.category)"
+              >
+                {{ product.category }}
+              </span>
+            </td>
+
+            <!-- Price -->
+            <td class="font-semibold text-zinc-800">₹{{ product.price | number }}</td>
+
+            <!-- Stock Qty -->
+            <td>
+              <div class="flex items-center gap-1.5">
+                <span
+                  class="w-1.5 h-1.5 rounded-full shrink-0"
+                  [ngClass]="{
+                    'bg-green-500': product.isActive && product.stockQuantity > 10,
+                    'bg-yellow-500': product.isActive && product.stockQuantity > 0 && product.stockQuantity <= 10,
+                    'bg-red-500': !product.isActive || product.stockQuantity === 0
+                  }"
+                ></span>
+                <span class="text-sm text-zinc-700 font-medium">{{ product.stockQuantity }}</span>
+              </div>
+            </td>
+
+            <!-- Status Tag -->
+            <td>
+              @if (!product.isActive) {
+                <p-tag value="Archived" severity="secondary" [rounded]="true"></p-tag>
+              } @else {
+                <p-tag
+                  [value]="getStockStatus(product)"
+                  [severity]="getStockSeverity(product)"
+                  [rounded]="true"
+                ></p-tag>
+              }
+            </td>
+
+            <!-- Actions -->
+            <td>
+              <div class="flex items-center gap-1">
+                <p-button
+                  icon="pi pi-arrow-circle-up"
+                  [text]="true"
+                  [rounded]="true"
+                  severity="secondary"
+                  pTooltip="Quick Restock"
+                  tooltipPosition="top"
+                  (onClick)="openRestockModal(product)"
+                ></p-button>
+
+                <div class="flex items-center gap-2 ml-1">
+                  <p-toggleswitch
+                    [ngModel]="product.isActive"
+                    [disabled]="togglingId() === product.id"
+                    (onChange)="onToggleStatus(product, $event.checked)"
+                  ></p-toggleswitch>
+                  <span class="text-xs text-zinc-400">
+                    {{ product.isActive ? 'Active' : 'Archived' }}
+                  </span>
+                </div>
+              </div>
+            </td>
+
+          </tr>
+        </ng-template>
+
+        <ng-template #emptymessage>
+          <tr>
+            <td colspan="6" class="text-center py-14">
+              <i class="pi pi-box text-4xl text-zinc-300 mb-3 block"></i>
+              <p class="text-sm text-zinc-400">No products found.</p>
+              <p-button
+                label="Add your first product"
+                [text]="true"
+                severity="secondary"
+                (onClick)="openAddModal()"
+                styleClass="text-sm! mt-2!"
+              ></p-button>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    }
+  </div>
 </div>
+
+<!-- ══════════════════════════════════════════
+     ADD PRODUCT DIALOG
+     ══════════════════════════════════════════ -->
+<p-dialog
+  header="Add New Product"
+  [visible]="isAddModalOpen()"
+  (visibleChange)="$event ? null : closeAddModal()"
+  [modal]="true"
+  [closable]="true"
+  [draggable]="false"
+  [resizable]="false"
+  styleClass="w-full max-w-lg!"
+>
+  <form [formGroup]="productForm" (ngSubmit)="submitAddProduct()" class="flex flex-col gap-5 py-1">
+
+    <div class="flex flex-col gap-1.5">
+      <label class="text-xs font-semibold text-zinc-600 uppercase tracking-wide">
+        Product Name <span class="text-red-500">*</span>
+      </label>
+      <input
+        pInputText
+        formControlName="name"
+        placeholder="e.g. Paneer Tikka Pizza"
+        class="w-full text-sm"
+        [class.ng-invalid]="isFieldInvalid('name')"
+        [class.ng-dirty]="isFieldInvalid('name')"
+      />
+      @if (isFieldInvalid('name')) {
+        <p class="text-xs text-red-500">Name is required (min 2 characters).</p>
+      }
+    </div>
+
+    <div class="flex flex-col gap-1.5">
+      <label class="text-xs font-semibold text-zinc-600 uppercase tracking-wide">Description</label>
+      <textarea
+        pTextarea
+        formControlName="description"
+        placeholder="Short description of the product..."
+        rows="2"
+        class="w-full text-sm resize-none"
+      ></textarea>
+    </div>
+
+    <div class="grid grid-cols-2 gap-4">
+      <div class="flex flex-col gap-1.5">
+        <label class="text-xs font-semibold text-zinc-600 uppercase tracking-wide">
+          Category <span class="text-red-500">*</span>
+        </label>
+        <p-select
+          formControlName="category"
+          [options]="categories"
+          optionLabel="label"
+          optionValue="value"
+          placeholder="Select category"
+          styleClass="w-full"
+          [class.ng-invalid]="isFieldInvalid('category')"
+          [class.ng-dirty]="isFieldInvalid('category')"
+        ></p-select>
+        @if (isFieldInvalid('category')) {
+          <p class="text-xs text-red-500">Category is required.</p>
+        }
+      </div>
+
+      <div class="flex flex-col gap-1.5">
+        <label class="text-xs font-semibold text-zinc-600 uppercase tracking-wide">
+          Price (₹) <span class="text-red-500">*</span>
+        </label>
+        <p-inputnumber
+          formControlName="price"
+          placeholder="e.g. 249"
+          [min]="1"
+          styleClass="w-full"
+          inputStyleClass="w-full text-sm"
+          [class.ng-invalid]="isFieldInvalid('price')"
+          [class.ng-dirty]="isFieldInvalid('price')"
+        ></p-inputnumber>
+        @if (isFieldInvalid('price')) {
+          <p class="text-xs text-red-500">Price must be at least ₹1.</p>
+        }
+      </div>
+    </div>
+
+    <div class="grid grid-cols-2 gap-4 items-end">
+      <div class="flex flex-col gap-1.5">
+        <label class="text-xs font-semibold text-zinc-600 uppercase tracking-wide">
+          Initial Stock <span class="text-red-500">*</span>
+        </label>
+        <p-inputnumber
+          formControlName="stockQuantity"
+          [min]="0"
+          styleClass="w-full"
+          inputStyleClass="w-full text-sm"
+        ></p-inputnumber>
+      </div>
+
+      <div class="flex flex-col gap-2">
+        <label class="text-xs font-semibold text-zinc-600 uppercase tracking-wide">Veg / Non-Veg</label>
+        <div class="flex items-center gap-3 h-10">
+          <p-toggleswitch formControlName="isVeg"></p-toggleswitch>
+          <span class="text-sm text-zinc-700">
+            {{ productForm.get('isVeg')?.value ? '🟢 Vegetarian' : '🔴 Non-Veg' }}
+          </span>
+        </div>
+      </div>
+    </div>
+
+  </form>
+
+  <ng-template #footer>
+    <div class="flex justify-end gap-3 pt-1">
+      <p-button
+        label="Cancel"
+        severity="secondary"
+        [outlined]="true"
+        [disabled]="isSubmitting()"
+        (onClick)="closeAddModal()"
+        styleClass="text-sm! rounded-lg!"
+      ></p-button>
+      <p-button
+        label="Add Product"
+        icon="pi pi-plus"
+        [loading]="isSubmitting()"
+        (onClick)="submitAddProduct()"
+        styleClass="bg-zinc-900! border-zinc-900! text-white! text-sm! rounded-lg!"
+      ></p-button>
+    </div>
+  </ng-template>
+</p-dialog>
+
+<!-- ══════════════════════════════════════════
+     QUICK RESTOCK DIALOG
+     ══════════════════════════════════════════ -->
+<p-dialog
+  [visible]="isRestockModalOpen()"
+  (visibleChange)="$event ? null : closeRestockModal()"
+  [modal]="true"
+  [closable]="true"
+  [draggable]="false"
+  [resizable]="false"
+  styleClass="w-full max-w-sm!"
+>
+  <ng-template #header>
+    <div class="flex items-center gap-2">
+      <i class="pi pi-arrow-circle-up text-zinc-600"></i>
+      <span class="text-base font-semibold text-zinc-900">Quick Restock</span>
+    </div>
+  </ng-template>
+
+  @if (restockTarget(); as target) {
+    <div class="py-2">
+      <p class="text-sm text-zinc-600 mb-1">
+        Restocking: <span class="font-semibold text-zinc-900">{{ target.name }}</span>
+      </p>
+      <p class="text-xs text-zinc-400 mb-5">
+        Current stock: <span class="font-medium text-zinc-700">{{ target.stockQuantity }} units</span>
+      </p>
+      <div class="grid grid-cols-3 gap-3">
+        @for (opt of restockOptions; track opt.value) {
+          <button
+            type="button"
+            (click)="confirmRestock(opt.value)"
+            class="flex flex-col items-center justify-center p-4 rounded-xl border-2 border-zinc-200 hover:border-zinc-900 hover:bg-zinc-50 transition-all cursor-pointer group"
+          >
+            <span class="text-lg font-bold text-zinc-900">+{{ opt.value }}</span>
+            <span class="text-xs text-zinc-400 mt-0.5">units</span>
+          </button>
+        }
+      </div>
+    </div>
+  }
+
+  <ng-template #footer>
+    <p-button
+      label="Cancel"
+      severity="secondary"
+      [outlined]="true"
+      (onClick)="closeRestockModal()"
+      styleClass="w-full! text-sm! rounded-lg!"
+    ></p-button>
+  </ng-template>
+</p-dialog>

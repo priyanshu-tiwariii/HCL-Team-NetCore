@@ -17,6 +17,12 @@ export const NAV_CONFIG: CustomMenuItem[] = [
     routerLink: '/orders',
     module: 'ORDERS',
   },
+  {
+    label: 'Menu',
+    icon: 'pi pi-book',
+    routerLink: '/products',
+    module: 'PRODUCTS',
+  },
 
   {
     separator: true,

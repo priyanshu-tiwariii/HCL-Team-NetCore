@@ -1,4 +1,4 @@
 export const environment = {
   production: false,
-  apiUrl: 'devlopmeent_backend_url',
+  apiUrl: 'https://weariest-unremissive-fidela.ngrok-free.dev/',
 };

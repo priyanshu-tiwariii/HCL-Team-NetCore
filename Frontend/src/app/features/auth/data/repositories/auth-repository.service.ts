@@ -11,7 +11,7 @@ export class AuthRepository {
   private readonly api = inject(ApiService);
 
   async login(credentials: LoginRequest): Promise<LoginResponse> {
-    return this.api.post<LoginResponse>('/api/Auth/login', credentials);
+    return this.api.post<LoginResponse>('/api/User/login', credentials);
   }
 
   // 1. API to register the user

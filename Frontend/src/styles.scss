@@ -315,6 +315,172 @@
 }
 
 /* ==========================================================
+   PRIMENG DIALOG — Clean Light Overrides
+   ========================================================== */
+.p-dialog {
+  background-color: #ffffff !important;
+  border: 1px solid #e4e4e7 !important;
+  border-radius: 12px !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12) !important;
+
+  /* Header */
+  .p-dialog-header {
+    background-color: #ffffff !important;
+    border-bottom: 1px solid #f4f4f5 !important;
+    border-radius: 12px 12px 0 0 !important;
+    padding: 20px 24px 16px !important;
+
+    .p-dialog-title {
+      color: #18181b !important;
+      font-size: 1rem !important;
+      font-weight: 600 !important;
+    }
+
+    .p-dialog-header-actions button,
+    .p-dialog-close-button {
+      color: #71717a !important;
+      background: transparent !important;
+      border: none !important;
+
+      &:hover {
+        background-color: #f4f4f5 !important;
+        color: #18181b !important;
+      }
+    }
+  }
+
+  /* Content */
+  .p-dialog-content {
+    background-color: #ffffff !important;
+    color: #3f3f46 !important;
+    padding: 20px 24px !important;
+  }
+
+  /* Footer */
+  .p-dialog-footer {
+    background-color: #fafafa !important;
+    border-top: 1px solid #f4f4f5 !important;
+    border-radius: 0 0 12px 12px !important;
+    padding: 14px 24px !important;
+  }
+}
+
+/* Overlay mask stays dark/translucent — that's correct */
+.p-dialog-mask {
+  background-color: rgba(0, 0, 0, 0.4) !important;
+}
+
+/* ==========================================================
+   PRIMENG INPUTS inside dialogs (and globally) — Light mode
+   ========================================================== */
+
+/* InputText */
+.p-inputtext {
+  background-color: #ffffff !important;
+  border: 1px solid #d4d4d8 !important;
+  color: #18181b !important;
+  border-radius: 8px !important;
+  font-size: 0.875rem !important;
+
+  &::placeholder {
+    color: #a1a1aa !important;
+  }
+
+  &:focus,
+  &:focus-within {
+    border-color: #a1a1aa !important;
+    box-shadow: 0 0 0 2px rgba(161, 161, 170, 0.2) !important;
+    outline: none !important;
+  }
+
+  &.ng-invalid.ng-dirty {
+    border-color: #ef4444 !important;
+  }
+}
+
+/* Textarea */
+.p-textarea,
+textarea.p-inputtext {
+  background-color: #ffffff !important;
+  border: 1px solid #d4d4d8 !important;
+  color: #18181b !important;
+  border-radius: 8px !important;
+  font-size: 0.875rem !important;
+
+  &::placeholder {
+    color: #a1a1aa !important;
+  }
+
+  &:focus {
+    border-color: #a1a1aa !important;
+    box-shadow: 0 0 0 2px rgba(161, 161, 170, 0.2) !important;
+    outline: none !important;
+  }
+}
+
+/* InputNumber */
+.p-inputnumber {
+  .p-inputnumber-input {
+    background-color: #ffffff !important;
+    border: 1px solid #d4d4d8 !important;
+    color: #18181b !important;
+    border-radius: 8px !important;
+    font-size: 0.875rem !important;
+
+    &::placeholder {
+      color: #a1a1aa !important;
+    }
+
+    &:focus {
+      border-color: #a1a1aa !important;
+      box-shadow: 0 0 0 2px rgba(161, 161, 170, 0.2) !important;
+      outline: none !important;
+    }
+  }
+
+  &.ng-invalid.ng-dirty .p-inputnumber-input {
+    border-color: #ef4444 !important;
+  }
+}
+
+/* Select (dropdown) inside dialogs*/
+.p-select {
+  background-color: #ffffff !important;
+  border: 1px solid #d4d4d8 !important;
+  border-radius: 8px !important;
+
+  .p-select-label {
+    color: #18181b !important;
+    font-size: 0.875rem !important;
+  }
+
+  .p-select-dropdown-icon,
+  .p-icon {
+    color: #71717a !important;
+  }
+
+  &:hover {
+    border-color: #a1a1aa !important;
+  }
+
+  &.ng-invalid.ng-dirty {
+    border-color: #ef4444 !important;
+  }
+}
+
+/* ToggleSwitch  */
+.p-toggleswitch {
+  .p-toggleswitch-slider {
+    background-color: #d4d4d8 !important;
+    border: none !important;
+  }
+
+  &.p-toggleswitch-checked .p-toggleswitch-slider {
+    background-color: #18181b !important;
+  }
+}
+
+/* ==========================================================
    PRIMENG TOAST OVERRIDES (Solid Fill, White Text Style)
    ... (keep your existing Toast CSS here) ...
    ========================================================== */
