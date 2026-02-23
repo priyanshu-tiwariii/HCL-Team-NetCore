@@ -82,4 +82,14 @@ export class HomeStateService {
   getQuantityInCart(productId: string): number {
     return this.cartItems().find((i) => i.product.id === productId)?.quantity ?? 0;
   }
+
+  /** Remove a specific item from the cart by product ID. */
+  removeFromCart(productId: string): void {
+    this.cartItems.update((items) => items.filter((i) => i.product.id !== productId));
+  }
+
+  /** Clear all items from the cart. */
+  clearCart(): void {
+    this.cartItems.set([]);
+  }
 }
